@@ -13,7 +13,25 @@ class App(QMainWindow):
         uic.loadUi('interface_PillowUI.ui', self)
 
     def open_file(self):
-        pass
+        flag_opening = True
+        while flag_opening:
+            self.file_name = \
+                QFileDialog.getOpenFileName(self, 'Открыть файл', '.')[0]
+            if self.file_name:
+                try:
+                    self.load_image = Image.open(self.file_name)
+                    flag_opening = False
+                except OSError:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Файл должен иметь '
+                                         'расширение графического файла, '
+                                         'поддерживаемого библиотекой PIL',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+            else:
+                break
+        else:
+            self.show_image()
+            self.init_ui()
 
     def save_file(self):
         pass
@@ -22,6 +40,9 @@ class App(QMainWindow):
         pass
 
     def show_image(self):
+        pass
+
+    def init_ui(self):
         pass
 
 
