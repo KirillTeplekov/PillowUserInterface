@@ -40,7 +40,11 @@ class App(QMainWindow):
         pass
 
     def show_image(self):
-        pass
+        self.pixmap = QPixmap(self.file_name)
+        self.lbl.setPixmap(self.pixmap)
+        self.lbl.resize(self.pixmap.width(), self.pixmap.height())
+        self.lbl.resize(self.pixmap.width(), self.pixmap.height())
+        self.scroll_image.setWidget(self.lbl)
 
     def init_ui(self):
         pass
