@@ -11,7 +11,9 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('interface_PillowUI.ui', self)
-
+        self.create_fileAction.triggered.connect(self.create_file)
+        self.open_fileAction.triggered.connect(self.open_file)        
+    
     def open_file(self):
         flag_opening = True
         while flag_opening:
