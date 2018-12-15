@@ -47,7 +47,52 @@ class App(QMainWindow):
         self.scroll_image.setWidget(self.lbl)
 
     def init_ui(self):
+        self.merge_image_btn.clicked.connect(self.merge_image)
+        self.change_pixel_color_btn.clicked.connect(self.change_pixel_color)
+        self.set_transparency_btn.clicked.connect(self.set_transparency)
+        self.image_resize_btn.clicked.connect(self.image_resize)
+        self.cut_btn.clicked.connect(self.cut)
+        self.cut_background_btn.clicked.connect(self.cut_background)
+        self.palette_btn.clicked.connect(self.open_palette)
+        self.grid_btn.clicked.connect(self.grid)
+        self.ruler_btn.clicked.connect(self.ruler)
+
+
+    def merge_image(self):
         pass
+
+
+    def change_pixel_color(self):
+        pass
+
+
+    def set_transparency(self):
+        pass
+
+
+    def image_resize(self):
+        pass
+
+
+    def cut(self):
+        pass
+
+
+    def cut_background(self):
+        pass
+
+
+    def open_palette(self):
+        pass
+
+
+    def grid(self):
+        pass
+
+
+    def ruler(self):
+        pass
+
 
 
 if __name__ == '__main__':
