@@ -65,7 +65,44 @@ class App(QMainWindow):
         self.flip_vertical_btn.clicked.connect(self.flip_vertical)
 
     def merge_image(self):
-        pass
+        pixels1 = self.load_image.load()
+        while True:
+            file_name2 = \
+                QFileDialog.getOpenFileName(self, 'Совместить файл', '.')[0]
+            if file_name2:
+                try:
+                    load_image2 = Image.open(file_name2)
+                    break
+                except OSError:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Файл должен иметь '
+                                         'расширение графического файла, '
+                                         'поддерживаемого библиотекой PIL',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+            else:
+                break
+        if load_image2:
+            val, ok_btn_pressed = QInputDialog.getInt(
+                self, 'Прозрачность', 'Укажите процент прозрачности:',
+                10, 50, 100, 10)
+            val = val / 100
+            if ok_btn_pressed:
+                width1, height2 = self.load_image.size
+                width2, height1 = load_image2.size
+                if width1 != width2 or height1 != height2:
+                    load_image2 = load_image2.resize((width1, height2))
+                pixels2 = load_image2.load()
+                x, y = self.load_image.size
+                for i in range(x):
+                    for j in range(y):
+                        r1, g1, b1 = pixels1[i, j]
+                        r2, g2, b2 = pixels2[i, j]
+                        r1 = r1 * val + r2 * val
+                        g1 = g1 * val + g2 * val
+                        b1 = b1 * val + b2 * val
+                        pixels1[i, j] = int(r1), int(g1), int(b1)
+                self.temp_image()
+                self.show_image()
 
 
     def change_pixel_color(self):
