@@ -177,7 +177,20 @@ class App(QMainWindow):
         pass
 
     def rotation(self):
-        pass
+        val, ok_btn_pressed = QInputDialog.getInt(
+            self, 'Поворот', 'Укажите градус поворота:',
+            45, 90, 270, 45)
+        if ok_btn_pressed:
+            direction, ok_btn_pressed = QInputDialog.getItem(
+                self, 'Поворот', 'Выберите направление поворота:',
+                ('Влево', 'Вправо'), 0, False)
+            if ok_btn_pressed:
+                if direction == 'Влево':
+                    self.load_image = self.load_image.rotate(val)
+                else:
+                    self.load_image = self.load_image.rotate(360 - val)
+                self.temp_image()
+                self.show_image()
 
     def flip_horizontally(self):
         pass
