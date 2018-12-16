@@ -193,10 +193,14 @@ class App(QMainWindow):
                 self.show_image()
 
     def flip_horizontally(self):
-        pass
-
+        self.load_image =self.load_image.transpose(Image.FLIP_TOP_BOTTOM)
+        self.temp_image()
+        self.show_image()
+        
     def flip_vertical(self):
-        pass
+        self.load_image = self.load_image.transpose(Image.FLIP_LEFT_RIGHT)
+        self.temp_image()
+        self.show_image()
 
 
 
