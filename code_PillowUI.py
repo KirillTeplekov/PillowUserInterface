@@ -15,14 +15,15 @@ class App(QMainWindow):
         self.open_fileAction.triggered.connect(self.open_file)        
     
     def open_file(self):
-        flag_opening = True
-        while flag_opening:
+        while True:
             self.file_name = \
                 QFileDialog.getOpenFileName(self, 'Открыть файл', '.')[0]
             if self.file_name:
                 try:
                     self.load_image = Image.open(self.file_name)
-                    flag_opening = False
+                    self.show_image()
+                    self.init_ui()
+                    break
                 except OSError:
                     QMessageBox.question(self, 'Предупреждение',
                                          'Файл должен иметь '
@@ -31,9 +32,6 @@ class App(QMainWindow):
                                          QMessageBox.Ok, QMessageBox.Ok)
             else:
                 break
-        else:
-            self.show_image()
-            self.init_ui()
 
     def save_file(self):
         pass
