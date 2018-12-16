@@ -46,6 +46,10 @@ class App(QMainWindow):
         self.lbl.resize(self.pixmap.width(), self.pixmap.height())
         self.scroll_image.setWidget(self.lbl)
 
+    def temp_image(self):
+        self.file_name = 'temp_im.jpg'
+        self.load_image.save(self.file_name)
+
     def init_ui(self):
         self.merge_image_btn.clicked.connect(self.merge_image)
         self.change_pixel_color_btn.clicked.connect(self.change_pixel_color)
