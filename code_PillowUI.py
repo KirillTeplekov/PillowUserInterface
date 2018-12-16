@@ -3,7 +3,7 @@ from PIL import Image
 from PyQt5 import uic
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, \
                              QLineEdit, QMainWindow, QAction, QFileDialog,
-                             QMessageBox, QScrollArea, QGridLayout)
+                             QMessageBox, QScrollArea, QGridLayout, QInputDialog)
 from PyQt5.QtGui import QPixmap
 
 
@@ -75,7 +75,32 @@ class App(QMainWindow):
 
 
     def image_resize(self):
-        pass
+        while True:
+            i, ok_btn_pressed = QInputDialog.getText(
+                self, 'Изменение размера изоражения', 'Введите новый размер '
+                                                      'изображения. размер '
+                                                      'должен быть указан в '
+                                                      'формате: "ширина";"высота"')
+
+            if ok_btn_pressed:
+                if ';' not in i:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Ширина и высота, указанные в '
+                                         'диалоговом окне, должны быть '
+                                         'разделены этим символом: ";"',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+                try:
+                    i = [int(item) for item in i.split(';')]
+                    self.load_image = self.load_image.resize(i)
+                    self.temp_image()
+                    self.show_image()
+                    break
+                except TypeError:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Введеные значения не соответствуют типу int',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+            else:
+                break
 
 
     def cut(self):
