@@ -244,6 +244,19 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
+       <widget class="QRadioButton" name="radioButton_all">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Все</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QRadioButton" name="radioButton_red">
         <property name="font">
          <font>
