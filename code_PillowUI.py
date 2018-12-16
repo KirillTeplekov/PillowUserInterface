@@ -71,7 +71,22 @@ class App(QMainWindow):
 
 
     def set_transparency(self):
-        pass
+        pixels1 = self.load_image.load()
+        val, ok_btn_pressed = QInputDialog.getInt(
+            self, 'Прозрачность', 'Укажите процент прозрачности:',
+            10, 50, 100, 10)
+        val = val / 100
+        if ok_btn_pressed:
+            x, y = self.load_image.size
+            for i in range(x):
+                for j in range(y):
+                    r1, g1, b1 = pixels1[i, j]
+                    r1 = r1 * val
+                    g1 = g1 * val
+                    b1 = b1 * val
+                    pixels1[i, j] = int(r1), int(g1), int(b1)
+            self.temp_image()
+            self.show_image()
 
 
     def image_resize(self):
