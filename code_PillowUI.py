@@ -60,7 +60,9 @@ class App(QMainWindow):
         self.palette_btn.clicked.connect(self.open_palette)
         self.grid_btn.clicked.connect(self.grid)
         self.ruler_btn.clicked.connect(self.ruler)
-
+        self.rotation_btn.clicked.connect(self.rotation)
+        self.flip_horizontally_btn.clicked.connect(self.flip_horizontally)
+        self.flip_vertical_btn.clicked.connect(self.flip_vertical)
 
     def merge_image(self):
         pass
@@ -135,6 +137,15 @@ class App(QMainWindow):
 
 
     def ruler(self):
+        pass
+
+    def rotation(self):
+        pass
+
+    def flip_horizontally(self):
+        pass
+
+    def flip_vertical(self):
         pass
 
 
