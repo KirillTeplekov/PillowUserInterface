@@ -97,9 +97,9 @@ class App(QMainWindow):
                     for j in range(y):
                         r1, g1, b1 = pixels1[i, j]
                         r2, g2, b2 = pixels2[i, j]
-                        r1 = r1 * val + r2 * val
-                        g1 = g1 * val + g2 * val
-                        b1 = b1 * val + b2 * val
+                        r1 = r1 * (1 - val) + r2 * val
+                        g1 = g1 * (1 - val) + g2 * val
+                        b1 = b1 * (1 - val) + b2 * val
                         pixels1[i, j] = int(r1), int(g1), int(b1)
                 self.temp_image()
                 self.show_image()
@@ -130,26 +130,26 @@ class App(QMainWindow):
 
     def image_resize(self):
         while True:
-            i, ok_btn_pressed = QInputDialog.getText(
+            val, ok_btn_pressed = QInputDialog.getText(
                 self, 'Изменение размера изоражения', 'Введите новый размер '
                                                       'изображения. размер '
                                                       'должен быть указан в '
                                                       'формате: "ширина";"высота"')
 
             if ok_btn_pressed:
-                if ';' not in i:
+                if ';' not in val:
                     QMessageBox.question(self, 'Предупреждение',
                                          'Ширина и высота, указанные в '
                                          'диалоговом окне, должны быть '
                                          'разделены этим символом: ";"',
                                          QMessageBox.Ok, QMessageBox.Ok)
                 try:
-                    i = [int(item) for item in i.split(';')]
-                    self.load_image = self.load_image.resize(i)
+                    val = [int(item) for item in val.split(';')]
+                    self.load_image = self.load_image.resize(val)
                     self.temp_image()
                     self.show_image()
                     break
-                except TypeError:
+                except ValueError:
                     QMessageBox.question(self, 'Предупреждение',
                                          'Введеные значения не соответствуют типу int',
                                          QMessageBox.Ok, QMessageBox.Ok)
