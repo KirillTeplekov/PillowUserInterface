@@ -106,7 +106,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="1" column="0">
-       <widget class="QPushButton" name="change_pixel_color_btn">
+       <widget class="QPushButton" name="thumbnail_image_btn">
         <property name="font">
          <font>
           <family>Times New Roman</family>
@@ -114,7 +114,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Заменить пиксели одного цвета на другие</string>
+         <string>Масшатабировать</string>
         </property>
         <property name="checkable">
          <bool>false</bool>
