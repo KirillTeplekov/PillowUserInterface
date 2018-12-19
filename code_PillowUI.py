@@ -242,43 +242,43 @@ class App(QMainWindow):
                 else:
                     break
 
-                if fl:
-                    while True:
-                        val, ok_btn_pressed = QInputDialog.getText(
-                            self, 'Обрезать',
-                            'Введите координаты правого нижнего угла '
-                            'в формате: x;y')
-                        if ok_btn_pressed:
-                            if ';' not in val:
-                                QMessageBox.question(self, 'Предупреждение',
-                                                     'x и y, указанные в '
-                                                     'диалоговом окне, должны быть '
-                                                     'разделены этим символом: ";"',
-                                                     QMessageBox.Ok,
-                                                     QMessageBox.Ok)
-                            elif len(val.split(';')) > 2:
-                                QMessageBox.question(self, 'Предупреждение',
-                                                     'Должно быть введено' ''
-                                                     'ТОЛЬКО два аргумента. '
-                                                     'Разве это так сложно?',
-                                                     QMessageBox.Ok,
-                                                     QMessageBox.Ok)
-                            else:
-                                try:
-                                    val = [int(item) for item in
-                                           val.split(';')]
-                                    x_max, y_max = val
-                                    self.load_image.crop((x_min, y_min, x_max,
-                                                          y_max))
-                                    break
-                                except Exception as e:
-                                    QMessageBox.question(self,
-                                                         'Предупреждение',
-                                                         str(e),
-                                                         QMessageBox.Ok,
-                                                         QMessageBox.Ok)
+            if fl:
+                while True:
+                    val, ok_btn_pressed = QInputDialog.getText(
+                        self, 'Обрезать',
+                        'Введите координаты правого нижнего угла '
+                        'в формате: x;y')
+                    if ok_btn_pressed:
+                        if ';' not in val:
+                            QMessageBox.question(self, 'Предупреждение',
+                                                 'x и y, указанные в '
+                                                 'диалоговом окне, должны быть '
+                                                 'разделены этим символом: ";"',
+                                                 QMessageBox.Ok,
+                                                 QMessageBox.Ok)
+                        elif len(val.split(';')) > 2:
+                            QMessageBox.question(self, 'Предупреждение',
+                                                 'Должно быть введено' ''
+                                                 'ТОЛЬКО два аргумента. '
+                                                 'Разве это так сложно?',
+                                                 QMessageBox.Ok,
+                                                 QMessageBox.Ok)
                         else:
-                            break
+                            try:
+                                val = [int(item) for item in
+                                       val.split(';')]
+                                x_max, y_max = val
+                                self.load_image.crop((x_min, y_min, x_max,
+                                                      y_max))
+                                break
+                            except Exception as e:
+                                QMessageBox.question(self,
+                                                     'Предупреждение',
+                                                     str(e),
+                                                     QMessageBox.Ok,
+                                                     QMessageBox.Ok)
+                    else:
+                        break
         except Exception as e:
             print(e)
 
