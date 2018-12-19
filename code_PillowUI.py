@@ -1,5 +1,6 @@
 import sys
 from PIL import Image
+from PIL import ImageDraw
 from PyQt5 import uic
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, \
                              QLineEdit, QMainWindow, QAction, QFileDialog,
@@ -259,7 +260,19 @@ class App(QMainWindow):
 
     #Добавить сетку
     def grid(self):
-        pass
+        #Создаем объект ImageDraw и передаем ему изображение
+        draw = ImageDraw.Draw(self.load_image)
+
+        #Рисуем вертикальные лини каждые 10 пикселей
+        for i in range(0, self.width, 10):
+            draw.line((i, 0, i + self.height, 0))
+
+        #Рисуем горизонталные линии каждые 10 пикселей
+        for j in range(0, self.height, 10):
+            draw.line((0,i, 0, i + self.width))
+
+        del draw
+        self.temp_image()
 
     #Заполнить случайными цветами
     def random_color(self):
