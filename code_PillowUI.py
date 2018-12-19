@@ -136,7 +136,7 @@ class App(QMainWindow):
                 channel_image.show()
 
             # Показывает зеленый канал
-            elif self.self.radioButton_green.isChecked():
+            elif self.radioButton_green.isChecked():
                 for i in range(self.width):
                     for j in range(self.height):
                         r, g, b = pixel[i, j]
