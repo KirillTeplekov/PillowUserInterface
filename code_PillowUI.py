@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, \
                              QLineEdit, QMainWindow, QAction, QFileDialog,
                              QMessageBox, QScrollArea, QGridLayout, QInputDialog)
 from PyQt5.QtGui import QPixmap
-
+from filtres_for_PillowUI import Filtres
 
 class App(QMainWindow):
     def __init__(self):
@@ -51,6 +51,12 @@ class App(QMainWindow):
         self.load_image.save(self.file_name)
 
     def init_ui(self):
+        self.shade_of_gray_action.triggered.connect(Filtres(self).shade_of_gray)
+        self.white_and_black_action.triggered.connect(Filtres(self).white_and_black)
+        self.sepia_action.triggered.connect(Filtres(self).sepia)
+        self.negative_action.triggered.connect(Filtres(self).negative)
+        self.noise_action.triggered.connect(Filtres(self).noise)
+        self.brightness_action.triggered.connect(Filtres(self).brightness)
         self.merge_image_btn.clicked.connect(self.merge_image)
         self.change_pixel_color_btn.clicked.connect(self.change_pixel_color)
         self.set_transparency_btn.clicked.connect(self.set_transparency)
