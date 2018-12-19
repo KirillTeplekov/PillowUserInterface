@@ -3,9 +3,9 @@ from PIL import Image
 from PyQt5 import uic
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, \
                              QLineEdit, QMainWindow, QAction, QFileDialog,
-                             QMessageBox, QScrollArea, QGridLayout)
+                             QMessageBox, QScrollArea, QGridLayout, QInputDialog)
 from PyQt5.QtGui import QPixmap
-
+from filtres_for_PillowUI import Filtres
 
 class App(QMainWindow):
     def __init__(self):
@@ -13,16 +13,22 @@ class App(QMainWindow):
         uic.loadUi('interface_PillowUI.ui', self)
         self.create_fileAction.triggered.connect(self.create_file)
         self.open_fileAction.triggered.connect(self.open_file)        
-    
+        self.file_name = ''
+        self.temp_name = ''
+        self.load_image = Image
+        self.pixmap = QPixmap()
+
+    #Открытие файла
     def open_file(self):
-        flag_opening = True
-        while flag_opening:
+        while True:
             self.file_name = \
                 QFileDialog.getOpenFileName(self, 'Открыть файл', '.')[0]
             if self.file_name:
                 try:
                     self.load_image = Image.open(self.file_name)
-                    flag_opening = False
+                    self.show_image()
+                    self.init_ui()
+                    break
                 except OSError:
                     QMessageBox.question(self, 'Предупреждение',
                                          'Файл должен иметь '
@@ -31,16 +37,16 @@ class App(QMainWindow):
                                          QMessageBox.Ok, QMessageBox.Ok)
             else:
                 break
-        else:
-            self.show_image()
-            self.init_ui()
 
+    #Сохранение файла
     def save_file(self):
         pass
 
+    #Создание файла
     def create_file(self):
         pass
 
+    #Показ изображения в QScrollArea
     def show_image(self):
         self.pixmap = QPixmap(self.file_name)
         self.lbl.setPixmap(self.pixmap)
@@ -48,7 +54,23 @@ class App(QMainWindow):
         self.lbl.resize(self.pixmap.width(), self.pixmap.height())
         self.scroll_image.setWidget(self.lbl)
 
+    #Создание временного изображения, с которым будет вестись работа,
+    # чтобы не испортить начальное изображение
+    def temp_image(self):
+        self.temp_name = 'temp_im.jpg'
+        self.load_image.save(self.file_name)
+
+    #Инициализация UI
     def init_ui(self):
+        #Подключение сигналов для меню "Фильтры"
+        self.shade_of_gray_action.triggered.connect(Filtres(self).shade_of_gray)
+        self.white_and_black_action.triggered.connect(Filtres(self).white_and_black)
+        self.sepia_action.triggered.connect(Filtres(self).sepia)
+        self.negative_action.triggered.connect(Filtres(self).negative)
+        self.noise_action.triggered.connect(Filtres(self).noise)
+        self.brightness_action.triggered.connect(Filtres(self).brightness)
+
+        #Подключение сигналов для кнопок
         self.merge_image_btn.clicked.connect(self.merge_image)
         self.change_pixel_color_btn.clicked.connect(self.change_pixel_color)
         self.set_transparency_btn.clicked.connect(self.set_transparency)
@@ -58,28 +80,116 @@ class App(QMainWindow):
         self.palette_btn.clicked.connect(self.open_palette)
         self.grid_btn.clicked.connect(self.grid)
         self.ruler_btn.clicked.connect(self.ruler)
+        self.rotation_btn.clicked.connect(self.rotation)
+        self.flip_horizontally_btn.clicked.connect(self.flip_horizontally)
+        self.flip_vertical_btn.clicked.connect(self.flip_vertical)
 
-
+    #Слияние изображений
     def merge_image(self):
-        pass
+        pixels1 = self.load_image.load()
+        while True:
+            file_name2 = \
+                QFileDialog.getOpenFileName(self, 'Совместить файл', '.')[0]
+            if file_name2:
+                try:
+                    load_image2 = Image.open(file_name2)
+                    break
+                except OSError:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Файл должен иметь '
+                                         'расширение графического файла, '
+                                         'поддерживаемого библиотекой PIL',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+            else:
+                break
+        if load_image2:
+            #Установление прозрачности для файла,
+            # с которым производится слияние
+            val, ok_btn_pressed = QInputDialog.getInt(
+                self, 'Прозрачность', 'Укажите процент прозрачности:',
+                5, 1, 10, 10)
+            val = val / 10
+            if ok_btn_pressed:
+                #Проверка размеров изображения, если они отличаются,
+                # то второе изображения принимает размер первого
+                width1, height2 = self.load_image.size
+                width2, height1 = load_image2.size
+                if width1 != width2 or height1 != height2:
+                    load_image2 = load_image2.resize((width1, height2))
+                pixels2 = load_image2.load()
+                x, y = self.load_image.size
+                #Слияние пикселей изображений с учетом прозрачности
+                for i in range(x):
+                    for j in range(y):
+                        r1, g1, b1 = pixels1[i, j]
+                        r2, g2, b2 = pixels2[i, j]
+                        r1 = r1 * (1 - val) + r2 * val
+                        g1 = g1 * (1 - val) + g2 * val
+                        b1 = b1 * (1 - val) + b2 * val
+                        pixels1[i, j] = int(r1), int(g1), int(b1)
+                self.temp_image()
+                self.show_image()
 
-
+    #Замена пикселей одного цвета на пиксели другого
     def change_pixel_color(self):
         pass
 
-
+    #Изменение прозрачности
     def set_transparency(self):
-        pass
+        pixels1 = self.load_image.load()
+        val, ok_btn_pressed = QInputDialog.getInt(
+            self, 'Прозрачность', 'Укажите процент прозрачности:',
+            5, 0, 10, 1)
+        val = val / 10
+        if ok_btn_pressed:
+            x, y = self.load_image.size
+            #Установление прзрачности для пикселей
+            for i in range(x):
+                for j in range(y):
+                    r1, g1, b1 = pixels1[i, j]
+                    r1 = r1 * val
+                    g1 = g1 * val
+                    b1 = b1 * val
+                    pixels1[i, j] = int(r1), int(g1), int(b1)
+            self.temp_image()
+            self.show_image()
 
-
+    #Изменение размера
     def image_resize(self):
-        pass
+        #Создание диалогового окна и проверка корректности значений
+        while True:
+            val, ok_btn_pressed = QInputDialog.getText(
+                self, 'Изменение размера изоражения', 'Введите новый размер '
+                                                      'изображения. размер '
+                                                      'должен быть указан в '
+                                                      'формате: "ширина";"высота"')
 
+            if ok_btn_pressed:
+                if ';' not in val:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Ширина и высота, указанные в '
+                                         'диалоговом окне, должны быть '
+                                         'разделены этим символом: ";"',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+                try:
+                    val = [int(item) for item in val.split(';')]
+                    #Изменение размера
+                    self.load_image = self.load_image.resize(val)
+                    self.temp_image()
+                    self.show_image()
+                    break
+                except ValueError:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Введеные значения не соответствуют типу int',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+            else:
+                break
 
+    #Обрезать изображение
     def cut(self):
         pass
 
-
+    #Обрезать однотонное изображение
     def cut_background(self):
         pass
 
@@ -87,7 +197,7 @@ class App(QMainWindow):
     def open_palette(self):
         pass
 
-
+    #Добавить сетку
     def grid(self):
         pass
 
@@ -95,6 +205,36 @@ class App(QMainWindow):
     def ruler(self):
         pass
 
+    #Поворот изображения
+    def rotation(self):
+        #Получение аргументов для поворота
+        val, ok_btn_pressed = QInputDialog.getInt(
+            self, 'Поворот', 'Укажите градус поворота:',
+            45, 90, 270, 45)
+        if ok_btn_pressed:
+            direction, ok_btn_pressed = QInputDialog.getItem(
+                self, 'Поворот', 'Выберите направление поворота:',
+                ('Влево', 'Вправо'), 0, False)
+            if ok_btn_pressed:
+                #Поворот
+                if direction == 'Влево':
+                    self.load_image = self.load_image.rotate(val)
+                else:
+                    self.load_image = self.load_image.rotate(360 - val)
+                self.temp_image()
+                self.show_image()
+
+    #Отражение по горизонтали
+    def flip_horizontally(self):
+        self.load_image =self.load_image.transpose(Image.FLIP_TOP_BOTTOM)
+        self.temp_image()
+        self.show_image()
+
+    #Отражение по вертикали
+    def flip_vertical(self):
+        self.load_image = self.load_image.transpose(Image.FLIP_LEFT_RIGHT)
+        self.temp_image()
+        self.show_image()
 
 
 if __name__ == '__main__':
