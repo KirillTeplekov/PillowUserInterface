@@ -113,37 +113,38 @@ class App(QMainWindow):
 
     #Показать один из цветовых каналов
     def show_channel(self):
-        try:
-            # Создает копию текущего изображения для отображения каналов
-            channel_image = self.load_image
-            pixel = channel_image.load()
-            if self.radioButton_all.isChecked():
-                channel_image.show()
-            # Показывает красный канал
-            elif self.radioButton_red.isChecked():
-                for i in range(self.width):
-                    for j in range(self.height):
-                        r, g, b = pixel[i, j]
-                        pixel[i, j] = r, 0, 0
-                channel_image.show()
+        # Создает копию текущего изображения для отображения каналов
+        channel_image_r = self.load_image
+        channel_image_g = self.load_image
+        channel_image_b = self.load_image
+        pixel_r = channel_image_r.load()
+        pixel_g = channel_image_g.load()
+        pixel_b = channel_image_b.load()
+        if self.radioButton_all.isChecked():
+            self.load_image.show()
+        # Показывает красный канал
+        elif self.radioButton_red.isChecked():
+            for i in range(self.width):
+                for j in range(self.height):
+                    r, g, b = pixel_r[i, j]
+                    pixel_r[i, j] = r, 0, 0
+            channel_image_r.show()
 
-            # Показывает синий канал
-            elif self.radioButton_blue.isChecked():
-                for i in range(self.width):
-                    for j in range(self.height):
-                        r, g, b = pixel[i, j]
-                        pixel[i, j] = 0, 0, b
-                channel_image.show()
+        # Показывает синий канал
+        elif self.radioButton_blue.isChecked():
+            for i in range(self.width):
+                for j in range(self.height):
+                    r, g, b = pixel_b[i, j]
+                    pixel_b[i, j] = 0, 0, b
+            channel_image_b.show()
 
-            # Показывает зеленый канал
-            elif self.radioButton_green.isChecked():
-                for i in range(self.width):
-                    for j in range(self.height):
-                        r, g, b = pixel[i, j]
-                        pixel[i, j] = 0, g, 0
-                channel_image.show()
-        except Exception as e:
-            print(e)
+        # Показывает зеленый канал
+        elif self.radioButton_green.isChecked():
+            for i in range(self.width):
+                for j in range(self.height):
+                    r, g, b = pixel_g[i, j]
+                    pixel_g[i, j] = 0, g, 0
+            channel_image_g.show()
 
     # Слияние изображений
     def merge_image(self):
