@@ -143,19 +143,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="grid_btn">
-        <property name="font">
-         <font>
-          <family>Times New Roman</family>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Сетка</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0">
        <widget class="QPushButton" name="set_transparency_btn">
         <property name="font">
@@ -208,7 +195,20 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
+      <item row="2" column="3">
+       <widget class="QPushButton" name="grid_btn">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Сетка</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
        <widget class="QPushButton" name="palette_btn">
         <property name="font">
          <font>
@@ -221,8 +221,8 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="ruler_btn">
+      <item row="0" column="3">
+       <widget class="QPushButton" name="random_color_btn">
         <property name="font">
          <font>
           <family>Times New Roman</family>
@@ -230,7 +230,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Линейка</string>
+         <string>Заполнить случайными цветами</string>
         </property>
        </widget>
       </item>
