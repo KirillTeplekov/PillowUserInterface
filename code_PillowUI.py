@@ -98,7 +98,7 @@ class App(QMainWindow):
 
         # Подключение сигналов для кнопок
         self.merge_image_btn.clicked.connect(self.merge_image)
-        self.change_pixel_color_btn.clicked.connect(self.change_pixel_color)
+        self.thumbnail_image_btn.clicked.connect(self.thumbnail_image)
         self.set_transparency_btn.clicked.connect(self.set_transparency)
         self.image_resize_btn.clicked.connect(self.image_resize)
         self.cut_btn.clicked.connect(self.cut)
@@ -153,8 +153,40 @@ class App(QMainWindow):
                 self.temp_image()
 
     # Замена пикселей одного цвета на пиксели другого
-    def change_pixel_color(self):
-        pass
+    def thumbnail_image(self):
+        # Получение значения из диалогового окна и проверка корректности
+        while True:
+            val, ok_btn_pressed = QInputDialog.getText(
+                self, 'Масштабирование изоражения', 'Введите новый размер '
+                                                    'изображения. размер '
+                                                    'должен быть указан в '
+                                                    'формате: "ширина";"высота"')
+
+            if ok_btn_pressed:
+                if ';' not in val:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Ширина и высота, указанные в '
+                                         'диалоговом окне, должны быть '
+                                         'разделены этим символом: ";"',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+                elif len(val.split(';')) > 2:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Должно быть введено ТОЛЬКО два '
+                                         'аргумента. Разве это так сложно?',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+                else:
+                    try:
+                        val = [int(item) for item in val.split(';')]
+                        # Масшатабирование изображения
+                        self.load_image = self.load_image.thumbnail(val)
+                        self.temp_image()
+                        break
+                    except ValueError:
+                        QMessageBox.question(self, 'Предупреждение',
+                                             'Введеные значения не соответствуют типу int',
+                                             QMessageBox.Ok, QMessageBox.Ok)
+            else:
+                break
 
     # Изменение прозрачности
     def set_transparency(self):
@@ -212,9 +244,10 @@ class App(QMainWindow):
     # Обрезать изображение
     def cut(self):
         fl = False
+        # Получение значения для левого верхнего угла
         while True:
             val, ok_btn_pressed = QInputDialog.getText(
-                self, 'Обрезать', 'Введите координаты левого верхнего угла' 
+                self, 'Обрезать', 'Введите координаты левого верхнего угла'
                                   ' в формате: x;y')
             if ok_btn_pressed:
                 if ';' not in val:
@@ -241,6 +274,8 @@ class App(QMainWindow):
             else:
                 break
 
+        # Получение значения для правого нижнего и последующая обрезка
+        # изображения
         if fl:
             while True:
                 val, ok_btn_pressed = QInputDialog.getText(
@@ -267,10 +302,10 @@ class App(QMainWindow):
                             val = [int(item) for item in
                                    val.split(';')]
                             x_max, y_max = val
-                            print(1)
                             self.load_image = self.load_image.crop((x_min,
-                                                                  y_min, x_max,
-                                                  y_max))
+                                                                    y_min,
+                                                                    x_max,
+                                                                    y_max))
                             self.temp_image()
                             break
                         except Exception as e:
@@ -328,6 +363,7 @@ class App(QMainWindow):
         self.load_image.crop((x_min, y_min, x_max, y_max))
         self.temp_image()
 
+    # Открыть палитру
     def open_palette(self):
         color = QColorDialog.getColor()
         if color.isValid():
@@ -339,6 +375,7 @@ class App(QMainWindow):
                                  QMessageBox.Yes | QMessageBox.No,
                                  QMessageBox.Ok)
             if QMessageBox.Yes:
+                # Запись значения цвета в файл
                 while True:
                     val, ok_btn_pressed = QInputDialog.getText(
                         self, 'Сохранить!',
