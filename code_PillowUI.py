@@ -211,63 +211,74 @@ class App(QMainWindow):
 
     # Обрезать изображение
     def cut(self):
-        fl = False
-        while True:
-            val, ok_btn_pressed = QInputDialog.getText(
-                self, 'Обрезать', 'Введите координаты левого верхнего угла' 
-                                  'в формате: x;y')
-            if ok_btn_pressed:
-                if ';' not in val:
-                    QMessageBox.question(self, 'Предупреждение',
-                                         'x и y, указанные в '
-                                         'диалоговом окне, должны быть '
-                                         'разделены этим символом: ";"',
-                                         QMessageBox.Ok, QMessageBox.Ok)
-                elif len(val.split(';')) > 2:
-                    QMessageBox.question(self, 'Предупреждение',
-                                         'Должно быть введено ТОЛЬКО два '
-                                         'аргумента. Разве это так сложно?',
-                                         QMessageBox.Ok, QMessageBox.Ok)
-                else:
-                    try:
-                        x_min, y_min = val.split(';')
-                        fl = True
-                    except Exception as e:
-                        QMessageBox.question(self, 'Предупреждение', e,
+        try:
+            fl = False
+            while True:
+                val, ok_btn_pressed = QInputDialog.getText(
+                    self, 'Обрезать', 'Введите координаты левого верхнего угла' 
+                                      'в формате: x;y')
+                if ok_btn_pressed:
+                    if ';' not in val:
+                        QMessageBox.question(self, 'Предупреждение',
+                                             'x и y, указанные в '
+                                             'диалоговом окне, должны быть '
+                                             'разделены этим символом: ";"',
                                              QMessageBox.Ok, QMessageBox.Ok)
-            else:
-                break
+                    elif len(val.split(';')) > 2:
+                        QMessageBox.question(self, 'Предупреждение',
+                                             'Должно быть введено ТОЛЬКО два '
+                                             'аргумента. Разве это так сложно?',
+                                             QMessageBox.Ok, QMessageBox.Ok)
+                    else:
+                        try:
+                            val = [int(item) for item in val.split(';')]
+                            x_min, y_min = val
+                            fl = True
+                        except Exception as e:
+                            QMessageBox.question(self, 'Предупреждение',
+                                                 str(e),
+                                                 QMessageBox.Ok, QMessageBox.Ok)
+                else:
+                    break
 
-            if fl:
-                while True:
-                    val, ok_btn_pressed = QInputDialog.getText(
-                        self, 'Обрезать',
-                        'Введите координаты правого нижнего угла'
-                        'в формате: x;y')
-                    if ok_btn_pressed:
-                        if ';' not in val:
-                            QMessageBox.question(self, 'Предупреждение',
-                                                 'x и y, указанные в '
-                                                 'диалоговом окне, должны быть '
-                                                 'разделены этим символом: ";"',
-                                                 QMessageBox.Ok,
-                                                 QMessageBox.Ok)
-                        elif len(val.split(';')) > 2:
-                            QMessageBox.question(self, 'Предупреждение',
-                                                 'Должно быть введено' ''
-                                                 'ТОЛЬКО два аргумента. '
-                                                 'Разве это так сложно?',
-                                                 QMessageBox.Ok,
-                                                 QMessageBox.Ok)
-                        else:
-                            try:
-                                x_max, y_max = val.split(';')
-                                self.load_image.crop((x_min, y_min, x_max,
-                                                      y_max))
-                            except Exception as e:
-                                QMessageBox.question(self, 'Предупреждение', e,
+                if fl:
+                    while True:
+                        val, ok_btn_pressed = QInputDialog.getText(
+                            self, 'Обрезать',
+                            'Введите координаты правого нижнего угла '
+                            'в формате: x;y')
+                        if ok_btn_pressed:
+                            if ';' not in val:
+                                QMessageBox.question(self, 'Предупреждение',
+                                                     'x и y, указанные в '
+                                                     'диалоговом окне, должны быть '
+                                                     'разделены этим символом: ";"',
                                                      QMessageBox.Ok,
                                                      QMessageBox.Ok)
+                            elif len(val.split(';')) > 2:
+                                QMessageBox.question(self, 'Предупреждение',
+                                                     'Должно быть введено' ''
+                                                     'ТОЛЬКО два аргумента. '
+                                                     'Разве это так сложно?',
+                                                     QMessageBox.Ok,
+                                                     QMessageBox.Ok)
+                            else:
+                                try:
+                                    val = [int(item) for item in
+                                           val.split(';')]
+                                    x_max, y_max = val
+                                    self.load_image.crop((x_min, y_min, x_max,
+                                                          y_max))
+                                except Exception as e:
+                                    QMessageBox.question(self,
+                                                         'Предупреждение',
+                                                         str(e),
+                                                         QMessageBox.Ok,
+                                                         QMessageBox.Ok)
+                    else:
+                        break
+        except Exception as e:
+            print(e)
 
     # Обрезать однотонное изображение
     def cut_background(self):
