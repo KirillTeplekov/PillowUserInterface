@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, \
                              QLineEdit, QMainWindow, QAction, QFileDialog,
                              QMessageBox, QScrollArea, QGridLayout, QInputDialog)
 from PyQt5.QtGui import QPixmap
-from filtres_for_PillowUI import Filtres
 
 class App(QMainWindow):
     def __init__(self):
@@ -17,6 +16,9 @@ class App(QMainWindow):
         self.temp_name = ''
         self.load_image = Image
         self.pixmap = QPixmap()
+        self.width = 0
+        self.height = 0
+        self.pixel = []
 
     #Открытие файла
     def open_file(self):
@@ -26,6 +28,8 @@ class App(QMainWindow):
             if self.file_name:
                 try:
                     self.load_image = Image.open(self.file_name)
+                    self.width, self.height = self.load_image.size
+                    self.pixel = self.load_image.load()
                     self.show_image()
                     self.init_ui()
                     break
@@ -59,16 +63,18 @@ class App(QMainWindow):
     def temp_image(self):
         self.temp_name = 'temp_im.jpg'
         self.load_image.save(self.file_name)
+        self.pixel = self.load_image.load()
+        self.width, self.height = self.load_image.size
 
     #Инициализация UI
     def init_ui(self):
         #Подключение сигналов для меню "Фильтры"
-        self.shade_of_gray_action.triggered.connect(Filtres(self).shade_of_gray)
-        self.white_and_black_action.triggered.connect(Filtres(self).white_and_black)
-        self.sepia_action.triggered.connect(Filtres(self).sepia)
-        self.negative_action.triggered.connect(Filtres(self).negative)
-        self.noise_action.triggered.connect(Filtres(self).noise)
-        self.brightness_action.triggered.connect(Filtres(self).brightness)
+        self.shade_of_gray_action.triggered.connect(self.shade_of_gray)
+        self.white_and_black_action.triggered.connect(self.white_and_black)
+        self.sepia_action.triggered.connect(self.sepia)
+        self.negative_action.triggered.connect(self.negative)
+        self.noise_action.triggered.connect(self.noise)
+        self.brightness_action.triggered.connect(self.brightness)
 
         #Подключение сигналов для кнопок
         self.merge_image_btn.clicked.connect(self.merge_image)
@@ -86,7 +92,6 @@ class App(QMainWindow):
 
     #Слияние изображений
     def merge_image(self):
-        pixels1 = self.load_image.load()
         while True:
             file_name2 = \
                 QFileDialog.getOpenFileName(self, 'Совместить файл', '.')[0]
@@ -107,26 +112,24 @@ class App(QMainWindow):
             # с которым производится слияние
             val, ok_btn_pressed = QInputDialog.getInt(
                 self, 'Прозрачность', 'Укажите процент прозрачности:',
-                5, 1, 10, 10)
+                5, 0, 10, 10)
             val = val / 10
             if ok_btn_pressed:
                 #Проверка размеров изображения, если они отличаются,
                 # то второе изображения принимает размер первого
-                width1, height2 = self.load_image.size
-                width2, height1 = load_image2.size
-                if width1 != width2 or height1 != height2:
-                    load_image2 = load_image2.resize((width1, height2))
+                width2, height2 = load_image2.size
+                if self.width != width2 or self.height != height2:
+                    load_image2 = load_image2.resize((self.width, self.height))
                 pixels2 = load_image2.load()
-                x, y = self.load_image.size
                 #Слияние пикселей изображений с учетом прозрачности
-                for i in range(x):
-                    for j in range(y):
-                        r1, g1, b1 = pixels1[i, j]
+                for i in range(self.width):
+                    for j in range(self.height):
+                        r1, g1, b1 = self.pixel[i, j]
                         r2, g2, b2 = pixels2[i, j]
                         r1 = r1 * (1 - val) + r2 * val
                         g1 = g1 * (1 - val) + g2 * val
                         b1 = b1 * (1 - val) + b2 * val
-                        pixels1[i, j] = int(r1), int(g1), int(b1)
+                        self.pixel[i, j] = int(r1), int(g1), int(b1)
                 self.temp_image()
                 self.show_image()
 
@@ -136,21 +139,19 @@ class App(QMainWindow):
 
     #Изменение прозрачности
     def set_transparency(self):
-        pixels1 = self.load_image.load()
         val, ok_btn_pressed = QInputDialog.getInt(
             self, 'Прозрачность', 'Укажите процент прозрачности:',
             5, 0, 10, 1)
         val = val / 10
         if ok_btn_pressed:
-            x, y = self.load_image.size
             #Установление прзрачности для пикселей
-            for i in range(x):
-                for j in range(y):
-                    r1, g1, b1 = pixels1[i, j]
+            for i in range(self.width):
+                for j in range(self.height):
+                    r1, g1, b1 = self.pixel[i, j]
                     r1 = r1 * val
                     g1 = g1 * val
                     b1 = b1 * val
-                    pixels1[i, j] = int(r1), int(g1), int(b1)
+                    self.pixel[i, j] = int(r1), int(g1), int(b1)
             self.temp_image()
             self.show_image()
 
@@ -191,8 +192,50 @@ class App(QMainWindow):
 
     #Обрезать однотонное изображение
     def cut_background(self):
-        pass
-
+        QMessageBox.question(self, 'Предупреждение',
+                             'Данная функция корректно работает только, '
+                             'если изображение окружено однотонным фоном со '
+                             'всех сторон хотя бы на один пиксель.',
+                             QMessageBox.Ok, QMessageBox.Ok)
+        fl = False
+        for i in range(self.width):
+            for j in range(self.height):
+                if self.pixel[i, j] != self.pixel[0, 0]:
+                    x_min = i
+                    fl = True
+                    break
+            if fl:
+                break
+        fl = False
+        for i in range(self.height):
+            for j in range(self.width):
+                if self.pixel[i, j] != self.pixel[0, 0]:
+                    y_min = i
+                    fl = True
+                    break
+            if fl:
+                break
+        fl = False
+        for i in range(self.width - 1, -1, -1):
+            for j in range(self.height - 1, -1, -1):
+                if self.pixel[i, j] != self.pixel[0, 0]:
+                    x_max = i
+                    fl = True
+                    break
+            if fl:
+                break
+        fl = False
+        for i in range(self.height - 1, -1, -1):
+            for j in range(self.width - 1, -1, -1):
+                if self.pixel[j, i] != self.pixel[0, 0]:
+                    y_max = i
+                    fl = True
+                    break
+            if fl:
+                break
+        self.load_image.crop((x_min, y_min, x_max, y_max))
+        self.temp_image()
+        self.show_image()
 
     def open_palette(self):
         pass
