@@ -70,7 +70,7 @@ class App(QMainWindow):
 
     # Показ изображения в QScrollArea
     def show_image(self):
-        self.pixmap = QPixmap(self.file_name)
+        self.pixmap = QPixmap(self.temp_name)
         self.lbl.setPixmap(self.pixmap)
         self.lbl.resize(self.pixmap.width(), self.pixmap.height())
         self.lbl.resize(self.pixmap.width(), self.pixmap.height())
