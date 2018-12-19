@@ -3,7 +3,8 @@ from PIL import Image
 from PyQt5 import uic
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, \
                              QLineEdit, QMainWindow, QAction, QFileDialog,
-                             QMessageBox, QScrollArea, QGridLayout, QInputDialog)
+                             QMessageBox, QScrollArea, QGridLayout,
+                             QInputDialog, QColorDialog)
 from PyQt5.QtGui import QPixmap
 
 class App(QMainWindow):
