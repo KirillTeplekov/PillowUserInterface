@@ -402,12 +402,12 @@ class App(QMainWindow):
         # Создаем объект ImageDraw и передаем ему изображение
         draw = ImageDraw.Draw(self.load_image)
 
-        # Рисуем вертикальные лини каждые 10 пикселей
-        for i in range(0, self.width, 10):
+        # Рисуем вертикальные лини каждые 50 пикселей
+        for i in range(0, self.width, 50):
             draw.line((i, 0, i + self.height, 0))
 
-        # Рисуем горизонталные линии каждые 10 пикселей
-        for j in range(0, self.height, 10):
+        # Рисуем горизонталные линии каждые 50 пикселей
+        for j in range(0, self.height, 50):
             draw.line((0, i, 0, i + self.width))
 
         del draw
@@ -530,7 +530,7 @@ class App(QMainWindow):
     #Яркость
     def brightness(self):
         factor, ok_btn_pressed = QInputDialog.getInt(
-            self.app, 'Шум', 'Укажите уровень яркости:',
+            self, 'Шум', 'Укажите уровень яркости:',
             5, -10, 10, 1)
         factor *= 10
         if ok_btn_pressed:
