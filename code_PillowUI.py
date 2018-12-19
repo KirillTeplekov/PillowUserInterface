@@ -249,7 +249,12 @@ class App(QMainWindow):
         self.temp_image()
 
     def open_palette(self):
-        pass
+        color = QColorDialog.getColor()
+        if color.isValid():
+            color = color.name()
+            QMessageBox.question(self, 'Выбранный цвет',
+                             color,
+                             QMessageBox.Ok, QMessageBox.Ok)
 
     #Добавить сетку
     def grid(self):
