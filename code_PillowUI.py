@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, \
                              QMessageBox, QScrollArea, QGridLayout,
                              QInputDialog, QColorDialog)
 from PyQt5.QtGui import QPixmap
+from random import randint
 
 class App(QMainWindow):
     def __init__(self):
@@ -260,9 +261,14 @@ class App(QMainWindow):
     def grid(self):
         pass
 
-
-    def ruler(self):
-        pass
+    #Заполнить случайными цветами
+    def random_color(self):
+        for i in range(self.width):
+            for j in range(self.height):
+                r = randint(0, 255)
+                g = randint(0, 255)
+                b = randint(0, 255)
+                self.pixel[i, j] = r, g, b
 
     #Поворот изображения
     def rotation(self):
