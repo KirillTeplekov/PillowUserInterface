@@ -105,7 +105,7 @@ class App(QMainWindow):
         self.cut_background_btn.clicked.connect(self.cut_background)
         self.palette_btn.clicked.connect(self.open_palette)
         self.grid_btn.clicked.connect(self.grid)
-        self.ruler_btn.clicked.connect(self.ruler)
+        self.random_color_btn.clicked.connect(self.random_color)
         self.rotation_btn.clicked.connect(self.rotation)
         self.flip_horizontally_btn.clicked.connect(self.flip_horizontally)
         self.flip_vertical_btn.clicked.connect(self.flip_vertical)
