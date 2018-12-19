@@ -255,9 +255,28 @@ class App(QMainWindow):
         if color.isValid():
             color = color.name()
             QMessageBox.question(self, 'Выбранный цвет',
-                             color,
-                             QMessageBox.Ok, QMessageBox.Ok)
-
+                                 color,
+                                 QMessageBox.Ok, QMessageBox.Ok)
+            QMessageBox.question(self, 'Сохранить?', 'Сохранить?',
+                                 QMessageBox.Yes | QMessageBox.No,
+                                 QMessageBox.Ok)
+            if QMessageBox.Yes:
+                while True:
+                    val, ok_btn_pressed = QInputDialog.getText(
+                        self, 'Сохранить!',
+                        'Введите название файла')
+                    if ok_btn_pressed:
+                        try:
+                            f = open(val, 'w')
+                            f.write(color)
+                            f.close()
+                            break
+                        except Exception as e:
+                            QMessageBox.question(self, 'Ошибка', e,
+                                                 QMessageBox.Ok,
+                                                 QMessageBox.Ok)
+                    else:
+                        break
     #Добавить сетку
     def grid(self):
         #Создаем объект ImageDraw и передаем ему изображение
