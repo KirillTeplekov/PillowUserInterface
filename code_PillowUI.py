@@ -98,7 +98,7 @@ class App(QMainWindow):
 
         # Подключение сигналов для кнопок
         self.merge_image_btn.clicked.connect(self.merge_image)
-        self.thumbnail_image_btn.clicked.connect(self.thumbnail_image)
+        self.show_image_in_window_btn.clicked.connect(self.show_image_in_window)
         self.set_transparency_btn.clicked.connect(self.set_transparency)
         self.image_resize_btn.clicked.connect(self.image_resize)
         self.cut_btn.clicked.connect(self.cut)
@@ -153,40 +153,8 @@ class App(QMainWindow):
                 self.temp_image()
 
     # Замена пикселей одного цвета на пиксели другого
-    def thumbnail_image(self):
-        # Получение значения из диалогового окна и проверка корректности
-        while True:
-            val, ok_btn_pressed = QInputDialog.getText(
-                self, 'Масштабирование изоражения', 'Введите новый размер '
-                                                    'изображения. размер '
-                                                    'должен быть указан в '
-                                                    'формате: "ширина";"высота"')
-
-            if ok_btn_pressed:
-                if ';' not in val:
-                    QMessageBox.question(self, 'Предупреждение',
-                                         'Ширина и высота, указанные в '
-                                         'диалоговом окне, должны быть '
-                                         'разделены этим символом: ";"',
-                                         QMessageBox.Ok, QMessageBox.Ok)
-                elif len(val.split(';')) > 2:
-                    QMessageBox.question(self, 'Предупреждение',
-                                         'Должно быть введено ТОЛЬКО два '
-                                         'аргумента. Разве это так сложно?',
-                                         QMessageBox.Ok, QMessageBox.Ok)
-                else:
-                    try:
-                        val = [int(item) for item in val.split(';')]
-                        # Масшатабирование изображения
-                        self.load_image = self.load_image.thumbnail(val)
-                        self.temp_image()
-                        break
-                    except ValueError:
-                        QMessageBox.question(self, 'Предупреждение',
-                                             'Введеные значения не соответствуют типу int',
-                                             QMessageBox.Ok, QMessageBox.Ok)
-            else:
-                break
+    def show_image_in_window(self):
+        self.load_image.show()
 
     # Изменение прозрачности
     def set_transparency(self):
