@@ -242,7 +242,7 @@
        <x>1210</x>
        <y>40</y>
        <width>141</width>
-       <height>131</height>
+       <height>141</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -251,7 +251,7 @@
         <property name="font">
          <font>
           <family>Times New Roman</family>
-          <pointsize>16</pointsize>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="text">
@@ -264,7 +264,7 @@
         <property name="font">
          <font>
           <family>Times New Roman</family>
-          <pointsize>16</pointsize>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="text">
@@ -277,7 +277,7 @@
         <property name="font">
          <font>
           <family>Times New Roman</family>
-          <pointsize>16</pointsize>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="text">
@@ -290,11 +290,18 @@
         <property name="font">
          <font>
           <family>Times New Roman</family>
-          <pointsize>16</pointsize>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="text">
          <string>Синий</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="show_channel_btn">
+        <property name="text">
+         <string>Показать</string>
         </property>
        </widget>
       </item>
