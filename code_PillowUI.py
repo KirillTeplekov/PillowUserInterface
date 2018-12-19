@@ -9,12 +9,13 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, \
 from PyQt5.QtGui import QPixmap
 from random import randint
 
+
 class App(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('interface_PillowUI.ui', self)
         self.create_fileAction.triggered.connect(self.create_file)
-        self.open_fileAction.triggered.connect(self.open_file)        
+        self.open_fileAction.triggered.connect(self.open_file)
         self.file_name = ''
         self.temp_name = ''
         self.load_image = Image
@@ -23,7 +24,7 @@ class App(QMainWindow):
         self.height = 0
         self.pixel = []
 
-    #Открытие файла
+    # Открытие файла
     def open_file(self):
         try:
             while True:
@@ -47,13 +48,15 @@ class App(QMainWindow):
                     break
         except Exception as e:
             print(e)
-    #Сохранение файла
+
+    # Сохранение файла
     def save_file(self):
         self.load_image.save(self.file_name)
 
-    #Создание файла
+    # Создание файла
     def create_file(self):
-        val, ok_btn_pressed = QInputDialog.getText(self, 'Создать', 'Введите название файла:')
+        val, ok_btn_pressed = QInputDialog.getText(self, 'Создать',
+                                                   'Введите название файла:')
         if ok_btn_pressed:
             # noinspection PyBroadException
             try:
@@ -65,7 +68,8 @@ class App(QMainWindow):
                 QMessageBox.question(self, 'Предупреждение',
                                      'Упс... Что-то пошло не так, попробуйте снова',
                                      QMessageBox.Ok, QMessageBox.Ok)
-    #Показ изображения в QScrollArea
+
+    # Показ изображения в QScrollArea
     def show_image(self):
         self.pixmap = QPixmap(self.file_name)
         self.lbl.setPixmap(self.pixmap)
@@ -73,7 +77,7 @@ class App(QMainWindow):
         self.lbl.resize(self.pixmap.width(), self.pixmap.height())
         self.scroll_image.setWidget(self.lbl)
 
-    #Создание временного изображения, с которым будет вестись работа,
+    # Создание временного изображения, с которым будет вестись работа,
     # чтобы не испортить начальное изображение
     def temp_image(self):
         self.temp_name = 'temp_im.jpg'
@@ -82,9 +86,9 @@ class App(QMainWindow):
         self.width, self.height = self.load_image.size
         self.show_image()
 
-    #Инициализация UI
+    # Инициализация UI
     def init_ui(self):
-        #Подключение сигналов для меню "Фильтры"
+        # Подключение сигналов для меню "Фильтры"
         # self.shade_of_gray_action.triggered.connect(self.shade_of_gray)
         # self.white_and_black_action.triggered.connect(self.white_and_black)
         # self.sepia_action.triggered.connect(self.sepia)
@@ -92,7 +96,7 @@ class App(QMainWindow):
         # self.noise_action.triggered.connect(self.noise)
         # self.brightness_action.triggered.connect(self.brightness)
 
-        #Подключение сигналов для кнопок
+        # Подключение сигналов для кнопок
         self.merge_image_btn.clicked.connect(self.merge_image)
         self.change_pixel_color_btn.clicked.connect(self.change_pixel_color)
         self.set_transparency_btn.clicked.connect(self.set_transparency)
@@ -106,7 +110,7 @@ class App(QMainWindow):
         self.flip_horizontally_btn.clicked.connect(self.flip_horizontally)
         self.flip_vertical_btn.clicked.connect(self.flip_vertical)
 
-    #Слияние изображений
+    # Слияние изображений
     def merge_image(self):
         while True:
             file_name2 = \
@@ -124,20 +128,20 @@ class App(QMainWindow):
             else:
                 break
         if load_image2:
-            #Установление прозрачности для файла,
+            # Установление прозрачности для файла,
             # с которым производится слияние
             val, ok_btn_pressed = QInputDialog.getInt(
                 self, 'Прозрачность', 'Укажите процент прозрачности:',
                 5, 0, 10, 1)
             val = val / 10
             if ok_btn_pressed:
-                #Проверка размеров изображения, если они отличаются,
+                # Проверка размеров изображения, если они отличаются,
                 # то второе изображения принимает размер первого
                 width2, height2 = load_image2.size
                 if self.width != width2 or self.height != height2:
                     load_image2 = load_image2.resize((self.width, self.height))
                 pixels2 = load_image2.load()
-                #Слияние пикселей изображений с учетом прозрачности
+                # Слияние пикселей изображений с учетом прозрачности
                 for i in range(self.width):
                     for j in range(self.height):
                         r1, g1, b1 = self.pixel[i, j]
@@ -148,19 +152,18 @@ class App(QMainWindow):
                         self.pixel[i, j] = int(r1), int(g1), int(b1)
                 self.temp_image()
 
-
-    #Замена пикселей одного цвета на пиксели другого
+    # Замена пикселей одного цвета на пиксели другого
     def change_pixel_color(self):
         pass
 
-    #Изменение прозрачности
+    # Изменение прозрачности
     def set_transparency(self):
         val, ok_btn_pressed = QInputDialog.getInt(
             self, 'Прозрачность', 'Укажите процент прозрачности:',
             5, 0, 10, 1)
         val = val / 10
         if ok_btn_pressed:
-            #Установление прзрачности для пикселей
+            # Установление прзрачности для пикселей
             for i in range(self.width):
                 for j in range(self.height):
                     r1, g1, b1 = self.pixel[i, j]
@@ -170,9 +173,9 @@ class App(QMainWindow):
                     self.pixel[i, j] = int(r1), int(g1), int(b1)
             self.temp_image()
 
-    #Изменение размера
+    # Изменение размера
     def image_resize(self):
-        #Создание диалогового окна и проверка корректности значений
+        # Создание диалогового окна и проверка корректности значений
         while True:
             val, ok_btn_pressed = QInputDialog.getText(
                 self, 'Изменение размера изоражения', 'Введите новый размер '
@@ -187,24 +190,87 @@ class App(QMainWindow):
                                          'диалоговом окне, должны быть '
                                          'разделены этим символом: ";"',
                                          QMessageBox.Ok, QMessageBox.Ok)
-                try:
-                    val = [int(item) for item in val.split(';')]
-                    #Изменение размера
-                    self.load_image = self.load_image.resize(val)
-                    self.temp_image()
-                    break
-                except ValueError:
+                elif len(val.split(';')) > 2:
                     QMessageBox.question(self, 'Предупреждение',
-                                         'Введеные значения не соответствуют типу int',
+                                         'Должно быть введено ТОЛЬКО два '
+                                         'аргумента. Разве это так сложно?',
                                          QMessageBox.Ok, QMessageBox.Ok)
+                else:
+                    try:
+                        val = [int(item) for item in val.split(';')]
+                        # Изменение размера
+                        self.load_image = self.load_image.resize(val)
+                        self.temp_image()
+                        break
+                    except ValueError:
+                        QMessageBox.question(self, 'Предупреждение',
+                                             'Введеные значения не соответствуют типу int',
+                                             QMessageBox.Ok, QMessageBox.Ok)
             else:
                 break
 
-    #Обрезать изображение
+    # Обрезать изображение
     def cut(self):
-        pass
+        fl = False
+        while True:
+            val, ok_btn_pressed = QInputDialog.getText(
+                self, 'Обрезать', 'Введите координаты левого верхнего угла')
+            if ok_btn_pressed:
+                if ';' not in val:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'x и y, указанные в '
+                                         'диалоговом окне, должны быть '
+                                         'разделены этим символом: ";"',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+                elif len(val.split(';')) > 2:
+                    QMessageBox.question(self, 'Предупреждение',
+                                         'Должно быть введено ТОЛЬКО два '
+                                         'аргумента. Разве это так сложно?',
+                                         QMessageBox.Ok, QMessageBox.Ok)
+                else:
+                    try:
+                        x_min, y_min = val.split(';')
+                        fl = True
+                    except ValueError:
+                        QMessageBox.question(self, 'Предупреждение',
+                                             'Введеные значения не соответствуют типу int',
+                                             QMessageBox.Ok, QMessageBox.Ok)
+            else:
+                break
 
-    #Обрезать однотонное изображение
+            if fl:
+                while True:
+                    val, ok_btn_pressed = QInputDialog.getText(
+                        self, 'Обрезать',
+                        'Введите координаты правого нижнего угла')
+                    if ok_btn_pressed:
+                        if ';' not in val:
+                            QMessageBox.question(self, 'Предупреждение',
+                                                 'x и y, указанные в '
+                                                 'диалоговом окне, должны быть '
+                                                 'разделены этим символом: ";"',
+                                                 QMessageBox.Ok,
+                                                 QMessageBox.Ok)
+                        elif len(val.split(';')) > 2:
+                            QMessageBox.question(self, 'Предупреждение',
+                                                 'Должно быть введено' ''
+                                                 'ТОЛЬКО два аргумента. '
+                                                 'Разве это так сложно?',
+                                                 QMessageBox.Ok,
+                                                 QMessageBox.Ok)
+                        else:
+                            try:
+                                x_max, y_max = val.split(';')
+                                self.load_image.crop((x_min, y_min, x_max,
+                                                      y_max))
+                            except ValueError:
+                                QMessageBox.question(self, 'Предупреждение',
+                                                     'Введеные значения'
+                                                     'не соответствуют типу int',
+                                                     QMessageBox.Ok,
+                                                     QMessageBox.Ok)
+
+    # Обрезать однотонное изображение
     def cut_background(self):
         QMessageBox.question(self, 'Предупреждение',
                              'Данная функция корректно работает только, '
@@ -277,23 +343,24 @@ class App(QMainWindow):
                                                  QMessageBox.Ok)
                     else:
                         break
-    #Добавить сетку
+
+    # Добавить сетку
     def grid(self):
-        #Создаем объект ImageDraw и передаем ему изображение
+        # Создаем объект ImageDraw и передаем ему изображение
         draw = ImageDraw.Draw(self.load_image)
 
-        #Рисуем вертикальные лини каждые 10 пикселей
+        # Рисуем вертикальные лини каждые 10 пикселей
         for i in range(0, self.width, 10):
             draw.line((i, 0, i + self.height, 0))
 
-        #Рисуем горизонталные линии каждые 10 пикселей
+        # Рисуем горизонталные линии каждые 10 пикселей
         for j in range(0, self.height, 10):
-            draw.line((0,i, 0, i + self.width))
+            draw.line((0, i, 0, i + self.width))
 
         del draw
         self.temp_image()
 
-    #Заполнить случайными цветами
+    # Заполнить случайными цветами
     def random_color(self):
         for i in range(self.width):
             for j in range(self.height):
@@ -302,9 +369,9 @@ class App(QMainWindow):
                 b = randint(0, 255)
                 self.pixel[i, j] = r, g, b
 
-    #Поворот изображения
+    # Поворот изображения
     def rotation(self):
-        #Получение аргументов для поворота
+        # Получение аргументов для поворота
         val, ok_btn_pressed = QInputDialog.getInt(
             self, 'Поворот', 'Укажите градус поворота:',
             45, 90, 270, 45)
@@ -313,20 +380,19 @@ class App(QMainWindow):
                 self, 'Поворот', 'Выберите направление поворота:',
                 ('Влево', 'Вправо'), 0, False)
             if ok_btn_pressed:
-                #Поворот
+                # Поворот
                 if direction == 'Влево':
                     self.load_image = self.load_image.rotate(val)
                 else:
                     self.load_image = self.load_image.rotate(360 - val)
                 self.temp_image()
 
-    #Отражение по горизонтали
+    # Отражение по горизонтали
     def flip_horizontally(self):
         self.load_image = self.load_image.transpose(Image.FLIP_TOP_BOTTOM)
         self.temp_image()
 
-
-    #Отражение по вертикали
+    # Отражение по вертикали
     def flip_vertical(self):
         self.load_image = self.load_image.transpose(Image.FLIP_LEFT_RIGHT)
         self.temp_image()
