@@ -89,12 +89,12 @@ class App(QMainWindow):
     # Инициализация UI
     def init_ui(self):
         # Подключение сигналов для меню "Фильтры"
-        # self.shade_of_gray_action.triggered.connect(self.shade_of_gray)
-        # self.white_and_black_action.triggered.connect(self.white_and_black)
-        # self.sepia_action.triggered.connect(self.sepia)
-        # self.negative_action.triggered.connect(self.negative)
-        # self.noise_action.triggered.connect(self.noise)
-        # self.brightness_action.triggered.connect(self.brightness)
+        self.shade_of_gray_action.triggered.connect(self.shade_of_gray)
+        self.white_and_black_action.triggered.connect(self.white_and_black)
+        self.sepia_action.triggered.connect(self.sepia)
+        self.negative_action.triggered.connect(self.negative)
+        self.noise_action.triggered.connect(self.noise)
+        self.brightness_action.triggered.connect(self.brightness)
 
         # Подключение сигналов для кнопок
         self.merge_image_btn.clicked.connect(self.merge_image)
@@ -445,6 +445,108 @@ class App(QMainWindow):
     def flip_vertical(self):
         self.load_image = self.load_image.transpose(Image.FLIP_LEFT_RIGHT)
         self.temp_image()
+
+    #Фильтры
+    #Оттенок серого
+    def shade_of_gray(self):
+        for i in range(self.width):
+            for j in range(self.height):
+                r, g, b = self.pixel[i, j]
+                new_color = (r * 30 + g * 59 + b * 11) // 100
+                self.pixel[i, j] = (new_color, new_color, new_color)
+        self.temp_image()
+
+    #Черно-белое изображение
+    def white_and_black(self):
+        for i in range(self.width):
+            for j in range(self.height):
+                r, g, b = self.pixel[i, j]
+                new_color = r + g + b
+                if new_color > 531:
+                    new_color = 255
+                else:
+                    new_color = 0
+                self.pixel[i, j] = (new_color, new_color, new_color)
+        self.temp_image()
+
+    #Сепия
+    def sepia(self):
+        depth, ok_btn_pressed = QInputDialog.getInt(
+            self, 'Шум', 'Укажите глубину:',
+            5, 0, 10, 1)
+        depth *= 10
+        if ok_btn_pressed:
+            for i in range(self.width):
+                for j in range(self.height):
+                    r, g, b = self.pixel[i, j]
+                    new_color = (r + g + b) // 3
+                    r = new_color + depth * 2
+                    g = new_color + depth
+                    b = new_color
+                    self.pixel[i, j] = r, g, b
+            self.temp_image()
+
+    #Негатив
+    def negative(self):
+        for i in range(self.width):
+            for j in range(self.height):
+                r, g, b = self.pixel[i, j]
+                self.pixel[i, j] = ((255 - r), (255 - g), (255 - b))
+        self.temp_image()
+
+    #Шумы изображения
+    def noise(self):
+        factor, ok_btn_pressed = QInputDialog.getInt(
+            self, 'Шум', 'Укажите уровень шума:',
+            5, 0, 10, 1)
+        factor *= 10
+        if ok_btn_pressed:
+            for i in range(self.width):
+                for j in range(self.height):
+                    r, g, b = self.pixel[i, j]
+                    rand = randint(-factor, factor)
+                    r += rand
+                    g += rand
+                    b += rand
+                    if r < 0:
+                        r = 0
+                    if g < 0:
+                        g = 0
+                    if b < 0:
+                        b = 0
+                    if r > 255:
+                        r = 255
+                    if g > 255:
+                        g = 255
+                    if b > 255:
+                        b = 255
+                    self.pixel[i, j] = r, g, b
+            self.temp_image()
+
+    #Яркость
+    def brightness(self):
+        factor, ok_btn_pressed = QInputDialog.getInt(
+            self.app, 'Шум', 'Укажите уровень яркости:',
+            5, -10, 10, 1)
+        factor *= 10
+        if ok_btn_pressed:
+            for i in range(self.width):
+                for j in range(self.height):
+                    r, g, b = self.pixel[i, j]
+                    if r < 0:
+                        r = 0
+                    if g < 0:
+                        g = 0
+                    if b < 0:
+                        b = 0
+                    if r > 255:
+                        r = 255
+                    if g > 255:
+                        g = 255
+                    if b > 255:
+                        b = 255
+                    self.pixel[i, j] = r, g, b
+            self.temp_image()
 
 
 if __name__ == '__main__':
