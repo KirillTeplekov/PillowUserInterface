@@ -30,7 +30,7 @@ class App(QMainWindow):
                     self.load_image = Image.open(self.file_name)
                     self.width, self.height = self.load_image.size
                     self.pixel = self.load_image.load()
-                    self.show_image()
+                    self.temp_image()
                     self.init_ui()
                     break
                 except OSError:
@@ -65,6 +65,7 @@ class App(QMainWindow):
         self.load_image.save(self.file_name)
         self.pixel = self.load_image.load()
         self.width, self.height = self.load_image.size
+        self.show_image()
 
     #Инициализация UI
     def init_ui(self):
@@ -131,7 +132,7 @@ class App(QMainWindow):
                         b1 = b1 * (1 - val) + b2 * val
                         self.pixel[i, j] = int(r1), int(g1), int(b1)
                 self.temp_image()
-                self.show_image()
+
 
     #Замена пикселей одного цвета на пиксели другого
     def change_pixel_color(self):
@@ -153,7 +154,6 @@ class App(QMainWindow):
                     b1 = b1 * val
                     self.pixel[i, j] = int(r1), int(g1), int(b1)
             self.temp_image()
-            self.show_image()
 
     #Изменение размера
     def image_resize(self):
@@ -177,7 +177,6 @@ class App(QMainWindow):
                     #Изменение размера
                     self.load_image = self.load_image.resize(val)
                     self.temp_image()
-                    self.show_image()
                     break
                 except ValueError:
                     QMessageBox.question(self, 'Предупреждение',
@@ -235,7 +234,6 @@ class App(QMainWindow):
                 break
         self.load_image.crop((x_min, y_min, x_max, y_max))
         self.temp_image()
-        self.show_image()
 
     def open_palette(self):
         pass
@@ -265,19 +263,17 @@ class App(QMainWindow):
                 else:
                     self.load_image = self.load_image.rotate(360 - val)
                 self.temp_image()
-                self.show_image()
 
     #Отражение по горизонтали
     def flip_horizontally(self):
         self.load_image =self.load_image.transpose(Image.FLIP_TOP_BOTTOM)
         self.temp_image()
-        self.show_image()
+
 
     #Отражение по вертикали
     def flip_vertical(self):
         self.load_image = self.load_image.transpose(Image.FLIP_LEFT_RIGHT)
         self.temp_image()
-        self.show_image()
 
 
 if __name__ == '__main__':
