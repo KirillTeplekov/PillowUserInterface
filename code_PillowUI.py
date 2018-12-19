@@ -44,12 +44,22 @@ class App(QMainWindow):
 
     #Сохранение файла
     def save_file(self):
-        pass
+        self.load_image.save(self.file_name)
 
     #Создание файла
     def create_file(self):
-        pass
-
+        val, ok_btn_pressed = QInputDialog.getText(self, 'Создать', 'Введите название файла:')
+        if ok_btn_pressed:
+            # noinspection PyBroadException
+            try:
+                self.file_name = val
+                self.load_image.new()
+                self.load_image.save(self.file_name)
+                self.temp_image()
+            except Exception:
+                QMessageBox.question(self, 'Предупреждение',
+                                     'Упс... Что-то пошло не так, попробуйте снова',
+                                     QMessageBox.Ok, QMessageBox.Ok)
     #Показ изображения в QScrollArea
     def show_image(self):
         self.pixmap = QPixmap(self.file_name)
