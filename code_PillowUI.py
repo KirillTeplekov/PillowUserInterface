@@ -216,7 +216,7 @@ class App(QMainWindow):
             while True:
                 val, ok_btn_pressed = QInputDialog.getText(
                     self, 'Обрезать', 'Введите координаты левого верхнего угла' 
-                                      'в формате: x;y')
+                                      ' в формате: x;y')
                 if ok_btn_pressed:
                     if ';' not in val:
                         QMessageBox.question(self, 'Предупреждение',
@@ -234,6 +234,7 @@ class App(QMainWindow):
                             val = [int(item) for item in val.split(';')]
                             x_min, y_min = val
                             fl = True
+                            break
                         except Exception as e:
                             QMessageBox.question(self, 'Предупреждение',
                                                  str(e),
