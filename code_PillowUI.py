@@ -214,7 +214,8 @@ class App(QMainWindow):
         fl = False
         while True:
             val, ok_btn_pressed = QInputDialog.getText(
-                self, 'Обрезать', 'Введите координаты левого верхнего угла')
+                self, 'Обрезать', 'Введите координаты левого верхнего угла' 
+                                  'в формате: x;y')
             if ok_btn_pressed:
                 if ';' not in val:
                     QMessageBox.question(self, 'Предупреждение',
@@ -231,9 +232,8 @@ class App(QMainWindow):
                     try:
                         x_min, y_min = val.split(';')
                         fl = True
-                    except ValueError:
-                        QMessageBox.question(self, 'Предупреждение',
-                                             'Введеные значения не соответствуют типу int',
+                    except Exception as e:
+                        QMessageBox.question(self, 'Предупреждение', e,
                                              QMessageBox.Ok, QMessageBox.Ok)
             else:
                 break
@@ -242,7 +242,8 @@ class App(QMainWindow):
                 while True:
                     val, ok_btn_pressed = QInputDialog.getText(
                         self, 'Обрезать',
-                        'Введите координаты правого нижнего угла')
+                        'Введите координаты правого нижнего угла'
+                        'в формате: x;y')
                     if ok_btn_pressed:
                         if ';' not in val:
                             QMessageBox.question(self, 'Предупреждение',
@@ -263,10 +264,8 @@ class App(QMainWindow):
                                 x_max, y_max = val.split(';')
                                 self.load_image.crop((x_min, y_min, x_max,
                                                       y_max))
-                            except ValueError:
-                                QMessageBox.question(self, 'Предупреждение',
-                                                     'Введеные значения'
-                                                     'не соответствуют типу int',
+                            except Exception as e:
+                                QMessageBox.question(self, 'Предупреждение', e,
                                                      QMessageBox.Ok,
                                                      QMessageBox.Ok)
 
