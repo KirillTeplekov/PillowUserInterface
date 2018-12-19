@@ -11,7 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Pillow User Interface</string>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QFrame" name="frame">
@@ -244,6 +247,19 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
+       <widget class="QRadioButton" name="radioButton_all">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Все</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QRadioButton" name="radioButton_red">
         <property name="font">
          <font>
@@ -295,109 +311,43 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Отразить</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="comboBox">
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <item>
-           <property name="text">
-            <string>по горизонтали</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>по вертикали</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QPushButton" name="rotation_btn">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Повернуть</string>
+        </property>
+       </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Повернуть изображение на </string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="degree_of_rotation">
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="editable">
-           <bool>false</bool>
-          </property>
-          <property name="maxVisibleItems">
-           <number>10</number>
-          </property>
-          <item>
-           <property name="text">
-            <string>90</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>180</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>270</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="direction_of_rotation">
-          <property name="font">
-           <font>
-            <family>Times New Roman</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <item>
-           <property name="text">
-            <string>Вправо</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Влево</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QPushButton" name="flip_horizontally_btn">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Отразить по горизонтали</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="flip_vertical_btn">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Отразить по вертикали</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -465,6 +415,12 @@
     <property name="title">
      <string>Фильтры</string>
     </property>
+    <addaction name="shade_of_gray_action"/>
+    <addaction name="white_and_black_action"/>
+    <addaction name="sepia_action"/>
+    <addaction name="negative_action"/>
+    <addaction name="noise_action"/>
+    <addaction name="brightness_action"/>
    </widget>
    <addaction name="File"/>
    <addaction name="Filters"/>
@@ -483,6 +439,36 @@
   <action name="save_fileAction">
    <property name="text">
     <string>Сохранить...</string>
+   </property>
+  </action>
+  <action name="shade_of_gray_action">
+   <property name="text">
+    <string>Оттенки серого</string>
+   </property>
+  </action>
+  <action name="white_and_black_action">
+   <property name="text">
+    <string>Черно-белое</string>
+   </property>
+  </action>
+  <action name="sepia_action">
+   <property name="text">
+    <string>Сепия</string>
+   </property>
+  </action>
+  <action name="negative_action">
+   <property name="text">
+    <string>Негатив</string>
+   </property>
+  </action>
+  <action name="noise_action">
+   <property name="text">
+    <string>Шумы</string>
+   </property>
+  </action>
+  <action name="brightness_action">
+   <property name="text">
+    <string>Яркость</string>
    </property>
   </action>
  </widget>
