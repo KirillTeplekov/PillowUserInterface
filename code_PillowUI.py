@@ -340,8 +340,8 @@ class App(QMainWindow):
                                  color,
                                  QMessageBox.Ok, QMessageBox.Ok)
             QMessageBox.question(self, 'Сохранить?', 'Сохранить?',
-                                 QMessageBox.Yes | QMessageBox.No,
-                                 QMessageBox.Ok)
+                                 QMessageBox.Yes|QMessageBox.No,
+                                 QMessageBox.Yes)
             if QMessageBox.Yes:
                 # Запись значения цвета в файл
                 while True:
