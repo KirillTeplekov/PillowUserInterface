@@ -22,26 +22,28 @@ class App(QMainWindow):
 
     #Открытие файла
     def open_file(self):
-        while True:
-            self.file_name = \
-                QFileDialog.getOpenFileName(self, 'Открыть файл', '.')[0]
-            if self.file_name:
-                try:
-                    self.load_image = Image.open(self.file_name)
-                    self.width, self.height = self.load_image.size
-                    self.pixel = self.load_image.load()
-                    self.temp_image()
-                    self.init_ui()
+        try:
+            while True:
+                self.file_name = \
+                    QFileDialog.getOpenFileName(self, 'Открыть файл', '.')[0]
+                if self.file_name:
+                    try:
+                        self.load_image = Image.open(self.file_name)
+                        self.width, self.height = self.load_image.size
+                        self.pixel = self.load_image.load()
+                        self.temp_image()
+                        self.init_ui()
+                        break
+                    except OSError:
+                        QMessageBox.question(self, 'Предупреждение',
+                                             'Файл должен иметь '
+                                             'расширение графического файла, '
+                                             'поддерживаемого библиотекой PIL',
+                                             QMessageBox.Ok, QMessageBox.Ok)
+                else:
                     break
-                except OSError:
-                    QMessageBox.question(self, 'Предупреждение',
-                                         'Файл должен иметь '
-                                         'расширение графического файла, '
-                                         'поддерживаемого библиотекой PIL',
-                                         QMessageBox.Ok, QMessageBox.Ok)
-            else:
-                break
-
+        except Exception as e:
+            print(e)
     #Сохранение файла
     def save_file(self):
         self.load_image.save(self.file_name)
@@ -72,7 +74,7 @@ class App(QMainWindow):
     # чтобы не испортить начальное изображение
     def temp_image(self):
         self.temp_name = 'temp_im.jpg'
-        self.load_image.save(self.file_name)
+        self.load_image.save(self.temp_name)
         self.pixel = self.load_image.load()
         self.width, self.height = self.load_image.size
         self.show_image()
@@ -80,12 +82,12 @@ class App(QMainWindow):
     #Инициализация UI
     def init_ui(self):
         #Подключение сигналов для меню "Фильтры"
-        self.shade_of_gray_action.triggered.connect(self.shade_of_gray)
-        self.white_and_black_action.triggered.connect(self.white_and_black)
-        self.sepia_action.triggered.connect(self.sepia)
-        self.negative_action.triggered.connect(self.negative)
-        self.noise_action.triggered.connect(self.noise)
-        self.brightness_action.triggered.connect(self.brightness)
+        # self.shade_of_gray_action.triggered.connect(self.shade_of_gray)
+        # self.white_and_black_action.triggered.connect(self.white_and_black)
+        # self.sepia_action.triggered.connect(self.sepia)
+        # self.negative_action.triggered.connect(self.negative)
+        # self.noise_action.triggered.connect(self.noise)
+        # self.brightness_action.triggered.connect(self.brightness)
 
         #Подключение сигналов для кнопок
         self.merge_image_btn.clicked.connect(self.merge_image)
@@ -123,7 +125,7 @@ class App(QMainWindow):
             # с которым производится слияние
             val, ok_btn_pressed = QInputDialog.getInt(
                 self, 'Прозрачность', 'Укажите процент прозрачности:',
-                5, 0, 10, 10)
+                5, 0, 10, 1)
             val = val / 10
             if ok_btn_pressed:
                 #Проверка размеров изображения, если они отличаются,
@@ -276,7 +278,7 @@ class App(QMainWindow):
 
     #Отражение по горизонтали
     def flip_horizontally(self):
-        self.load_image =self.load_image.transpose(Image.FLIP_TOP_BOTTOM)
+        self.load_image = self.load_image.transpose(Image.FLIP_TOP_BOTTOM)
         self.temp_image()
 
 
