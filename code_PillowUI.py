@@ -114,9 +114,9 @@ class App(QMainWindow):
     #Показать один из цветовых каналов
     def show_channel(self):
         # Создает копию текущего изображения для отображения каналов
-        channel_image_r = self.load_image
-        channel_image_g = self.load_image
-        channel_image_b = self.load_image
+        channel_image_r = self.load_image.copy()
+        channel_image_g = self.load_image.copy()
+        channel_image_b = self.load_image.copy()
         pixel_r = channel_image_r.load()
         pixel_g = channel_image_g.load()
         pixel_b = channel_image_b.load()
