@@ -1,12 +1,11 @@
 import sys
+import os
 from PIL import Image
 from PIL import ImageDraw
 from PyQt5 import uic
-from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, \
-                             QLineEdit, QMainWindow, QAction, QFileDialog,
-                             QMessageBox, QScrollArea, QGridLayout,
-                             QInputDialog, QColorDialog)
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog,
+                             QMessageBox, QInputDialog, QColorDialog)
+from PyQt5.QtGui import QPixmap, QCloseEvent
 from random import randint
 
 
@@ -98,7 +97,8 @@ class App(QMainWindow):
 
         # Подключение сигналов для кнопок
         self.merge_image_btn.clicked.connect(self.merge_image)
-        self.show_image_in_window_btn.clicked.connect(self.show_image_in_window)
+        self.show_image_in_window_btn.clicked.connect(
+            self.show_image_in_window)
         self.set_transparency_btn.clicked.connect(self.set_transparency)
         self.image_resize_btn.clicked.connect(self.image_resize)
         self.cut_btn.clicked.connect(self.cut)
@@ -111,7 +111,7 @@ class App(QMainWindow):
         self.flip_vertical_btn.clicked.connect(self.flip_vertical)
         self.show_channel_btn.clicked.connect(self.show_channel)
 
-    #Показать один из цветовых каналов
+    # Показать один из цветовых каналов
     def show_channel(self):
         # Создает копию текущего изображения для отображения каналов
         channel_image_r = self.load_image.copy()
@@ -376,7 +376,7 @@ class App(QMainWindow):
                                  color,
                                  QMessageBox.Ok, QMessageBox.Ok)
             QMessageBox.question(self, 'Сохранить?', 'Сохранить?',
-                                 QMessageBox.Yes|QMessageBox.No,
+                                 QMessageBox.Yes | QMessageBox.No,
                                  QMessageBox.Yes)
             if QMessageBox.Yes:
                 # Запись значения цвета в файл
@@ -450,8 +450,8 @@ class App(QMainWindow):
         self.load_image = self.load_image.transpose(Image.FLIP_LEFT_RIGHT)
         self.temp_image()
 
-    #Фильтры
-    #Оттенок серого
+    # Фильтры
+    # Оттенок серого
     def shade_of_gray(self):
         for i in range(self.width):
             for j in range(self.height):
@@ -460,7 +460,7 @@ class App(QMainWindow):
                 self.pixel[i, j] = (new_color, new_color, new_color)
         self.temp_image()
 
-    #Черно-белое изображение
+    # Черно-белое изображение
     def white_and_black(self):
         for i in range(self.width):
             for j in range(self.height):
@@ -473,7 +473,7 @@ class App(QMainWindow):
                 self.pixel[i, j] = (new_color, new_color, new_color)
         self.temp_image()
 
-    #Сепия
+    # Сепия
     def sepia(self):
         depth, ok_btn_pressed = QInputDialog.getInt(
             self, 'Шум', 'Укажите глубину:',
@@ -490,7 +490,7 @@ class App(QMainWindow):
                     self.pixel[i, j] = r, g, b
             self.temp_image()
 
-    #Негатив
+    # Негатив
     def negative(self):
         for i in range(self.width):
             for j in range(self.height):
@@ -498,7 +498,7 @@ class App(QMainWindow):
                 self.pixel[i, j] = ((255 - r), (255 - g), (255 - b))
         self.temp_image()
 
-    #Шумы изображения
+    # Шумы изображения
     def noise(self):
         factor, ok_btn_pressed = QInputDialog.getInt(
             self, 'Шум', 'Укажите уровень шума:',
@@ -527,7 +527,7 @@ class App(QMainWindow):
                     self.pixel[i, j] = r, g, b
             self.temp_image()
 
-    #Яркость
+    # Яркость
     def brightness(self):
         factor, ok_btn_pressed = QInputDialog.getInt(
             self, 'Шум', 'Укажите уровень яркости:',
@@ -551,6 +551,10 @@ class App(QMainWindow):
                         b = 255
                     self.pixel[i, j] = r, g, b
             self.temp_image()
+
+    def closeEvent(self, a0: QCloseEvent):
+        os.remove(self.temp_name)
+        self.close()
 
 
 if __name__ == '__main__':
