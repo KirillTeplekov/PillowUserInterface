@@ -413,11 +413,6 @@
     <addaction name="open_fileAction"/>
     <addaction name="save_fileAction"/>
    </widget>
-   <widget class="QMenu" name="Mini_commands">
-    <property name="title">
-     <string>Мини-команды</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="Filters">
     <property name="title">
      <string>Фильтры</string>
@@ -431,7 +426,6 @@
    </widget>
    <addaction name="File"/>
    <addaction name="Filters"/>
-   <addaction name="Mini_commands"/>
   </widget>
   <action name="create_fileAction">
    <property name="text">
