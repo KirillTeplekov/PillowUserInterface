@@ -109,6 +109,38 @@ class App(QMainWindow):
         self.rotation_btn.clicked.connect(self.rotation)
         self.flip_horizontally_btn.clicked.connect(self.flip_horizontally)
         self.flip_vertical_btn.clicked.connect(self.flip_vertical)
+        self.show_channel_btn.clicked.connect(self.show_channel)
+
+    #Показать один из цветовых каналов
+    def show_channel(self):
+        # Создает копию текущего изображения для отображения каналов
+        channel_image = self.load_image
+        pixel = channel_image.load()
+        if self.radioButtin_all.isChecked():
+            channel_image.show()
+        # Показывает красный канал
+        elif self.radioButton_red.isChecked():
+            for i in range(self.width):
+                for j in range(self.height):
+                    r, g, b = pixel[i, j]
+                    pixel[i, j] = r, 0, 0
+            channel_image.show()
+
+        # Показывает синий канал
+        elif self.radioButton_blue.isChecked():
+            for i in range(self.width):
+                for j in range(self.height):
+                    r, g, b = pixel[i, j]
+                    pixel[i, j] = 0, 0, b
+            channel_image.show()
+
+        # Показывает зеленый канал
+        elif self.self.radioButton_green.isChecked():
+            for i in range(self.width):
+                for j in range(self.height):
+                    r, g, b = pixel[i, j]
+                    pixel[i, j] = 0, g, 0
+            channel_image.show()
 
     # Слияние изображений
     def merge_image(self):
@@ -270,7 +302,6 @@ class App(QMainWindow):
                             val = [int(item) for item in
                                    val.split(';')]
                             x_max, y_max = val
-                            print(1)
                             self.load_image = self.load_image.crop((x_min,
                                                                     y_min,
                                                                     x_max,
@@ -341,8 +372,8 @@ class App(QMainWindow):
                                  color,
                                  QMessageBox.Ok, QMessageBox.Ok)
             QMessageBox.question(self, 'Сохранить?', 'Сохранить?',
-                                 QMessageBox.Yes | QMessageBox.No,
-                                 QMessageBox.Ok)
+                                 QMessageBox.Yes|QMessageBox.No,
+                                 QMessageBox.Yes)
             if QMessageBox.Yes:
                 # Запись значения цвета в файл
                 while True:
