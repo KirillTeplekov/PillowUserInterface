@@ -269,14 +269,15 @@ class App(QMainWindow):
                                     x_max, y_max = val
                                     self.load_image.crop((x_min, y_min, x_max,
                                                           y_max))
+                                    break
                                 except Exception as e:
                                     QMessageBox.question(self,
                                                          'Предупреждение',
                                                          str(e),
                                                          QMessageBox.Ok,
                                                          QMessageBox.Ok)
-                    else:
-                        break
+                        else:
+                            break
         except Exception as e:
             print(e)
 
