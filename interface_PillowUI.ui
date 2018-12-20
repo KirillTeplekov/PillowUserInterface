@@ -412,6 +412,7 @@
     <addaction name="create_fileAction"/>
     <addaction name="open_fileAction"/>
     <addaction name="save_fileAction"/>
+    <addaction name="save_file_asAction"/>
    </widget>
    <widget class="QMenu" name="Filters">
     <property name="title">
@@ -470,6 +471,11 @@
   <action name="brightness_action">
    <property name="text">
     <string>Яркость</string>
+   </property>
+  </action>
+  <action name="save_file_asAction">
+   <property name="text">
+    <string>Сохранить как...</string>
    </property>
   </action>
  </widget>
