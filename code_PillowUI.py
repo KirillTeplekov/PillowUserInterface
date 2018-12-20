@@ -52,6 +52,19 @@ class App(QMainWindow):
     def save_file(self):
         self.load_image.save(self.file_name)
 
+    # Сохранение файла как...
+    def save_file_as(self):
+        val, ok_btn_pressed = QInputDialog.getText(
+            self, 'Сохранить файл',
+            'Введите название файла')
+        if ok_btn_pressed:
+            try:
+                self.load_image.save(val)
+            except Exception as e:
+                QMessageBox.question(self, 'Ошибка', str(e),
+                                     QMessageBox.Ok,
+                                     QMessageBox.Ok)
+
     # Создание файла
     def create_file(self):
         val, ok_btn_pressed = QInputDialog.getText(self, 'Создать',
@@ -110,6 +123,10 @@ class App(QMainWindow):
         self.flip_horizontally_btn.clicked.connect(self.flip_horizontally)
         self.flip_vertical_btn.clicked.connect(self.flip_vertical)
         self.show_channel_btn.clicked.connect(self.show_channel)
+
+        # Подключение кнопок меню "Файл"
+        self.save_file_asAction.triggered.connect(self.save_file_as)
+        self.save_fileAction.triggered.connect(self.save_file)
 
     # Показать один из цветовых каналов
     def show_channel(self):
@@ -170,8 +187,8 @@ class App(QMainWindow):
             val, ok_btn_pressed = QInputDialog.getInt(
                 self, 'Прозрачность', 'Укажите процент прозрачности:',
                 5, 0, 10, 1)
-            val = val / 10
             if ok_btn_pressed:
+                val = val / 10
                 # Проверка размеров изображения, если они отличаются,
                 # то второе изображения принимает размер первого
                 width2, height2 = load_image2.size
@@ -189,7 +206,7 @@ class App(QMainWindow):
                         self.pixel[i, j] = int(r1), int(g1), int(b1)
                 self.temp_image()
 
-    # Замена пикселей одного цвета на пиксели другого
+    # Показ изображения в отдельном окне
     def show_image_in_window(self):
         self.load_image.show()
 
@@ -198,8 +215,8 @@ class App(QMainWindow):
         val, ok_btn_pressed = QInputDialog.getInt(
             self, 'Прозрачность', 'Укажите процент прозрачности:',
             5, 0, 10, 1)
-        val = val / 10
         if ok_btn_pressed:
+            val = val / 10
             # Установление прзрачности для пикселей
             for i in range(self.width):
                 for j in range(self.height):
@@ -329,6 +346,7 @@ class App(QMainWindow):
                              'если изображение окружено однотонным фоном со '
                              'всех сторон хотя бы на один пиксель.',
                              QMessageBox.Ok, QMessageBox.Ok)
+        # Поиска верхнего левого угла для нового изображения
         fl = False
         for i in range(self.width):
             for j in range(self.height):
@@ -347,6 +365,7 @@ class App(QMainWindow):
                     break
             if fl:
                 break
+        # Поиска нижнего правого угла
         fl = False
         for i in range(self.width - 1, -1, -1):
             for j in range(self.height - 1, -1, -1):
@@ -372,34 +391,31 @@ class App(QMainWindow):
     def open_palette(self):
         color = QColorDialog.getColor()
         if color.isValid():
-            try:
-                color = color.name()
-                QMessageBox.question(self, 'Выбранный цвет',
-                                     color,
-                                     QMessageBox.Ok, QMessageBox.Ok)
-                reply = QMessageBox.question(self, 'Сохранить?', 'Сохранить?',
-                                             QMessageBox.Yes | QMessageBox.No,
-                                             QMessageBox.No)
-                if reply == QMessageBox.Yes:
-                    # Запись значения цвета в файл
-                    while True:
-                        val, ok_btn_pressed = QInputDialog.getText(
-                            self, 'Сохранить!',
-                            'Введите название файла')
-                        if ok_btn_pressed:
-                            try:
-                                f = open(val, 'w')
-                                f.write(color)
-                                f.close()
-                                break
-                            except Exception as e:
-                                QMessageBox.question(self, 'Ошибка', e,
-                                                     QMessageBox.Ok,
-                                                     QMessageBox.Ok)
-                        else:
+            color = color.name()
+            QMessageBox.question(self, 'Выбранный цвет',
+                                 color,
+                                 QMessageBox.Ok, QMessageBox.Ok)
+            reply = QMessageBox.question(self, 'Сохранить?', 'Сохранить?',
+                                         QMessageBox.Yes | QMessageBox.No,
+                                         QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                # Запись значения цвета в файл
+                while True:
+                    val, ok_btn_pressed = QInputDialog.getText(
+                        self, 'Сохранить!',
+                        'Введите название файла')
+                    if ok_btn_pressed:
+                        try:
+                            f = open(val, 'w')
+                            f.write(color)
+                            f.close()
                             break
-            except Exception as e:
-                print(e)
+                        except Exception as e:
+                            QMessageBox.question(self, 'Ошибка', str(e),
+                                                 QMessageBox.Ok,
+                                                 QMessageBox.Ok)
+                    else:
+                        break
 
     # Добавить сетку
     def grid(self):
@@ -478,7 +494,8 @@ class App(QMainWindow):
                 self.pixel[i, j] = (new_color, new_color, new_color)
         self.temp_image()
 
-   # Сепия
+        # Сепия
+
     def sepia(self):
         depth, ok_btn_pressed = QInputDialog.getInt(
             self, 'Сепия', 'Укажите глубину:',
@@ -508,8 +525,8 @@ class App(QMainWindow):
         factor, ok_btn_pressed = QInputDialog.getInt(
             self, 'Шум', 'Укажите уровень шума:',
             5, 0, 10, 1)
-        factor *= 10
         if ok_btn_pressed:
+            factor *= 10
             for i in range(self.width):
                 for j in range(self.height):
                     r, g, b = self.pixel[i, j]
@@ -541,7 +558,7 @@ class App(QMainWindow):
             factor *= 10
             for i in range(self.width):
                 for j in range(self.height):
-                    r, g, b = self.pixel[i, j] 
+                    r, g, b = self.pixel[i, j]
                     r += factor
                     g += factor
                     b += factor
@@ -559,7 +576,7 @@ class App(QMainWindow):
                         b = 255
                     self.pixel[i, j] = r, g, b
             self.temp_image()
-            
+
     def closeEvent(self, a0: QCloseEvent):
         if self.temp_name:
             os.remove(self.temp_name)
