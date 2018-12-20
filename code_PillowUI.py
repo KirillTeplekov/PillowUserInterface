@@ -73,13 +73,14 @@ class App(QMainWindow):
             # noinspection PyBroadException
             try:
                 self.file_name = val
-                self.load_image.new()
+                self.load_image = Image.new('RGB', (500, 500))
                 self.load_image.save(self.file_name)
                 self.temp_image()
-            except Exception:
+            except Exception as e:
                 QMessageBox.question(self, 'Предупреждение',
                                      'Упс... Что-то пошло не так, попробуйте снова',
                                      QMessageBox.Ok, QMessageBox.Ok)
+                print(e)
 
     # Показ изображения в QScrollArea
     def show_image(self):
