@@ -216,9 +216,9 @@ class App(QMainWindow):
         while True:
             val, ok_btn_pressed = QInputDialog.getText(
                 self, 'Изменение размера изображения', 'Введите новый размер '
-                                                      'изображения. размер '
-                                                      'должен быть указан в '
-                                                      'формате: "ширина";"высота"')
+                                                       'изображения. размер '
+                                                       'должен быть указан в '
+                                                       'формате: "ширина";"высота"')
 
             if ok_btn_pressed:
                 if ';' not in val:
@@ -378,8 +378,8 @@ class App(QMainWindow):
                                      color,
                                      QMessageBox.Ok, QMessageBox.Ok)
                 reply = QMessageBox.question(self, 'Сохранить?', 'Сохранить?',
-                                     QMessageBox.Yes | QMessageBox.No,
-                                     QMessageBox.No)
+                                             QMessageBox.Yes | QMessageBox.No,
+                                             QMessageBox.No)
                 if reply == QMessageBox.Yes:
                     # Запись значения цвета в файл
                     while True:
@@ -400,6 +400,7 @@ class App(QMainWindow):
                             break
             except Exception as e:
                 print(e)
+
     # Добавить сетку
     def grid(self):
         # Создаем объект ImageDraw и передаем ему изображение
@@ -480,7 +481,7 @@ class App(QMainWindow):
     # Сепия
     def sepia(self):
         depth, ok_btn_pressed = QInputDialog.getInt(
-            self, 'Шум', 'Укажите глубину:',
+            self, 'Сепия', 'Укажите глубину:',
             5, 0, 10, 1)
         depth *= 10
         if ok_btn_pressed:
