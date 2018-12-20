@@ -478,13 +478,13 @@ class App(QMainWindow):
                 self.pixel[i, j] = (new_color, new_color, new_color)
         self.temp_image()
 
-    # Сепия
+   # Сепия
     def sepia(self):
         depth, ok_btn_pressed = QInputDialog.getInt(
             self, 'Сепия', 'Укажите глубину:',
             5, 0, 10, 1)
-        depth *= 10
         if ok_btn_pressed:
+            depth *= 10
             for i in range(self.width):
                 for j in range(self.height):
                     r, g, b = self.pixel[i, j]
@@ -535,13 +535,16 @@ class App(QMainWindow):
     # Яркость
     def brightness(self):
         factor, ok_btn_pressed = QInputDialog.getInt(
-            self, 'Шум', 'Укажите уровень яркости:',
+            self, 'Яркость', 'Укажите уровень яркости:',
             5, -10, 10, 1)
-        factor *= 10
         if ok_btn_pressed:
+            factor *= 10
             for i in range(self.width):
                 for j in range(self.height):
-                    r, g, b = self.pixel[i, j]
+                    r, g, b = self.pixel[i, j] 
+                    r += factor
+                    g += factor
+                    b += factor
                     if r < 0:
                         r = 0
                     if g < 0:
@@ -556,7 +559,7 @@ class App(QMainWindow):
                         b = 255
                     self.pixel[i, j] = r, g, b
             self.temp_image()
-
+            
     def closeEvent(self, a0: QCloseEvent):
         if self.temp_name:
             os.remove(self.temp_name)
