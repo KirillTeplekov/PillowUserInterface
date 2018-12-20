@@ -500,7 +500,7 @@ class App(QMainWindow):
         for i in range(self.width):
             for j in range(self.height):
                 r, g, b = self.pixel[i, j]
-                self.pixel[i, j] = ((255 - r), (255 - g), (255 - b))
+                self.pixel[i, j] = (255 - r), (255 - g), (255 - b)
         self.temp_image()
 
     # Шумы изображения
