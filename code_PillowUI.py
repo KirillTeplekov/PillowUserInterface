@@ -148,6 +148,7 @@ class App(QMainWindow):
 
     # Слияние изображений
     def merge_image(self):
+        load_image2 = ''
         while True:
             file_name2 = \
                 QFileDialog.getOpenFileName(self, 'Совместить файл', '.')[0]
@@ -214,7 +215,7 @@ class App(QMainWindow):
         # Создание диалогового окна и проверка корректности значений
         while True:
             val, ok_btn_pressed = QInputDialog.getText(
-                self, 'Изменение размера изоражения', 'Введите новый размер '
+                self, 'Изменение размера изображения', 'Введите новый размер '
                                                       'изображения. размер '
                                                       'должен быть указан в '
                                                       'формате: "ширина";"высота"')
@@ -371,32 +372,34 @@ class App(QMainWindow):
     def open_palette(self):
         color = QColorDialog.getColor()
         if color.isValid():
-            color = color.name()
-            QMessageBox.question(self, 'Выбранный цвет',
-                                 color,
-                                 QMessageBox.Ok, QMessageBox.Ok)
-            QMessageBox.question(self, 'Сохранить?', 'Сохранить?',
-                                 QMessageBox.Yes | QMessageBox.No,
-                                 QMessageBox.Yes)
-            if QMessageBox.Yes:
-                # Запись значения цвета в файл
-                while True:
-                    val, ok_btn_pressed = QInputDialog.getText(
-                        self, 'Сохранить!',
-                        'Введите название файла')
-                    if ok_btn_pressed:
-                        try:
-                            f = open(val, 'w')
-                            f.write(color)
-                            f.close()
+            try:
+                color = color.name()
+                QMessageBox.question(self, 'Выбранный цвет',
+                                     color,
+                                     QMessageBox.Ok, QMessageBox.Ok)
+                reply = QMessageBox.question(self, 'Сохранить?', 'Сохранить?',
+                                     QMessageBox.Yes | QMessageBox.No,
+                                     QMessageBox.No)
+                if reply == QMessageBox.Yes:
+                    # Запись значения цвета в файл
+                    while True:
+                        val, ok_btn_pressed = QInputDialog.getText(
+                            self, 'Сохранить!',
+                            'Введите название файла')
+                        if ok_btn_pressed:
+                            try:
+                                f = open(val, 'w')
+                                f.write(color)
+                                f.close()
+                                break
+                            except Exception as e:
+                                QMessageBox.question(self, 'Ошибка', e,
+                                                     QMessageBox.Ok,
+                                                     QMessageBox.Ok)
+                        else:
                             break
-                        except Exception as e:
-                            QMessageBox.question(self, 'Ошибка', e,
-                                                 QMessageBox.Ok,
-                                                 QMessageBox.Ok)
-                    else:
-                        break
-
+            except Exception as e:
+                print(e)
     # Добавить сетку
     def grid(self):
         # Создаем объект ImageDraw и передаем ему изображение
@@ -421,6 +424,7 @@ class App(QMainWindow):
                 g = randint(0, 255)
                 b = randint(0, 255)
                 self.pixel[i, j] = r, g, b
+        self.temp_image()
 
     # Поворот изображения
     def rotation(self):
@@ -553,7 +557,8 @@ class App(QMainWindow):
             self.temp_image()
 
     def closeEvent(self, a0: QCloseEvent):
-        os.remove(self.temp_name)
+        if self.temp_name:
+            os.remove(self.temp_name)
         self.close()
 
 
